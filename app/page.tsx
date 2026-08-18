@@ -134,7 +134,6 @@ export default function Home() {
       ===================================================== */}
 
       <div className="fixed left-6 lg:left-10 top-1/2 -translate-y-1/2 z-50 hidden lg:flex flex-col gap-7">
-
         {sections.map((section) => (
           <button
             key={section.id}
@@ -142,7 +141,6 @@ export default function Home() {
             className="flex items-center gap-3 group text-left"
             aria-label={`Go to ${section.label}`}
           >
-
             <div
               className={`h-2.5 w-2.5 rounded-full transition-all duration-500 ${
                 active === section.id
@@ -160,10 +158,8 @@ export default function Home() {
             >
               {section.time}
             </span>
-
           </button>
         ))}
-
       </div>
 
 
@@ -178,7 +174,6 @@ export default function Home() {
         }}
         className="relative min-h-screen w-full flex items-end overflow-hidden"
       >
-
         <Image
           src="/images/cafe-lights.jpg"
           alt="Warm cafe lights"
@@ -201,26 +196,18 @@ export default function Home() {
         <div className="relative z-10 px-8 sm:px-16 lg:px-24 pb-20 sm:pb-24 max-w-6xl">
 
           <div className="mb-6 flex items-center gap-4">
-
             <div className="h-px w-12 bg-[#F4A261]" />
 
             <span className="font-[IBM_Plex_Mono] text-[#F4A261] text-[11px] tracking-[0.3em] uppercase">
               07:30 — First Light
             </span>
-
           </div>
 
           <h1 className="font-[Fraunces] italic text-6xl sm:text-7xl lg:text-8xl xl:text-9xl leading-[0.88] tracking-tight text-[#F6E7D8]">
-
             Where the
-
             <br />
-
-            <span className="text-[#F4A261]">
-              day
-            </span>{" "}
+            <span className="text-[#F4A261]">day</span>{" "}
             begins.
-
           </h1>
 
           <p className="mt-8 text-base sm:text-lg text-[#F6E7D8]/70 max-w-xl leading-relaxed">
@@ -229,7 +216,6 @@ export default function Home() {
           </p>
 
           <div className="mt-10 flex items-center gap-6">
-
             <button
               onClick={() => scrollToSection("morning")}
               className="group flex items-center gap-4 rounded-full border border-[#F6E7D8]/20 bg-[#F6E7D8]/5 backdrop-blur-md px-6 py-3 text-sm transition-all duration-500 hover:bg-[#F4A261] hover:text-[#071A2B]"
@@ -239,32 +225,28 @@ export default function Home() {
               <span className="transition-transform duration-300 group-hover:translate-y-1">
                 ↓
               </span>
-
             </button>
 
             <span className="hidden sm:block font-[IBM_Plex_Mono] text-[10px] tracking-[0.2em] uppercase text-[#F6E7D8]/40">
               Cebu · Philippines
             </span>
-
           </div>
 
         </div>
 
         <div className="absolute bottom-8 right-8 sm:right-16 flex flex-col items-center gap-2 text-[#F6E7D8]/40">
-
           <span className="font-[IBM_Plex_Mono] text-[9px] tracking-[0.2em] uppercase [writing-mode:vertical-rl]">
             Scroll
           </span>
 
           <div className="h-12 w-px bg-gradient-to-b from-[#F4A261] to-transparent" />
-
         </div>
 
       </section>
 
 
       {/* =====================================================
-          MORNING / OCEAN
+          MORNING
       ===================================================== */}
 
       <section
@@ -279,27 +261,30 @@ export default function Home() {
 
         <div className="relative z-10 grid lg:grid-cols-2 min-h-screen">
 
+          {/* LIGHT MORNING IMAGE */}
+
           <div className="relative min-h-[55vh] lg:min-h-screen overflow-hidden">
 
             <Image
-              src="/images/cafe 4.jpg"
-              alt="Morning cafe atmosphere"
+              src="/images/cafe6.jpg"
+              alt="Bright morning cafe atmosphere"
               fill
               sizes="(max-width: 1024px) 100vw, 50vw"
               className="object-cover transition-transform duration-1000 hover:scale-105"
             />
 
-            <div className="absolute inset-0 bg-gradient-to-t from-[#071A2B]/40 via-transparent to-[#087E8B]/10" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#071A2B]/30 via-transparent to-[#087E8B]/5" />
 
             <div className="absolute bottom-8 left-8 rounded-full border border-white/20 bg-[#071A2B]/30 backdrop-blur-md px-4 py-2">
-
               <span className="font-[IBM_Plex_Mono] text-[9px] tracking-[0.2em] uppercase text-white/80">
                 Morning light
               </span>
-
             </div>
 
           </div>
+
+
+          {/* TEXT */}
 
           <div className="relative flex flex-col justify-center px-8 sm:px-16 lg:px-24 py-20">
 
@@ -308,15 +293,11 @@ export default function Home() {
             </span>
 
             <h2 className="font-[Fraunces] text-5xl sm:text-6xl lg:text-7xl leading-[0.95] mt-5">
-
               Slow mornings.
-
               <br />
-
               <span className="italic text-[#087E8B]">
                 Clear minds.
               </span>
-
             </h2>
 
             <p className="mt-8 max-w-md text-[#071A2B]/65 leading-relaxed">
@@ -327,19 +308,16 @@ export default function Home() {
             <div className="mt-12 grid grid-cols-2 gap-3 max-w-md">
 
               <div className="rounded-2xl border border-[#071A2B]/10 bg-white/30 p-5">
-
                 <span className="font-[IBM_Plex_Mono] text-[9px] tracking-[0.2em] uppercase text-[#071A2B]/40">
                   Atmosphere
                 </span>
 
                 <p className="mt-2 font-[Fraunces] text-xl">
-                  Quiet & warm
+                  Bright & warm
                 </p>
-
               </div>
 
               <div className="rounded-2xl border border-[#071A2B]/10 bg-white/30 p-5">
-
                 <span className="font-[IBM_Plex_Mono] text-[9px] tracking-[0.2em] uppercase text-[#071A2B]/40">
                   Best with
                 </span>
@@ -347,7 +325,6 @@ export default function Home() {
                 <p className="mt-2 font-[Fraunces] text-xl">
                   Your first cup
                 </p>
-
               </div>
 
             </div>
@@ -360,7 +337,7 @@ export default function Home() {
 
 
       {/* =====================================================
-          GOLDEN HOUR / MOUNTAIN
+          GOLDEN HOUR
       ===================================================== */}
 
       <section
@@ -386,15 +363,11 @@ export default function Home() {
             </span>
 
             <h2 className="font-[Fraunces] text-5xl sm:text-6xl lg:text-7xl leading-[0.9] mt-5">
-
               When the sky
-
               <br />
-
               <span className="italic text-[#FFE8A3]">
                 turns gold.
               </span>
-
             </h2>
 
             <p className="mt-8 max-w-md text-[#071A2B]/70 leading-relaxed">
@@ -416,6 +389,7 @@ export default function Home() {
 
           </div>
 
+
           <div className="relative min-h-[55vh] lg:min-h-screen order-1 lg:order-2 overflow-hidden">
 
             <Image
@@ -429,11 +403,9 @@ export default function Home() {
             <div className="absolute inset-0 bg-gradient-to-l from-transparent via-transparent to-[#E76F51]/30" />
 
             <div className="absolute bottom-8 right-8 rounded-full border border-white/20 bg-[#071A2B]/30 backdrop-blur-md px-4 py-2">
-
               <span className="font-[IBM_Plex_Mono] text-[9px] tracking-[0.2em] uppercase text-white/80">
                 Mountain view
               </span>
-
             </div>
 
           </div>
@@ -444,7 +416,7 @@ export default function Home() {
 
 
       {/* =====================================================
-          MENU / THE TABLE
+          MENU
       ===================================================== */}
 
       <section
@@ -461,8 +433,6 @@ export default function Home() {
 
         <div className="relative z-10 max-w-6xl mx-auto">
 
-          {/* Menu header */}
-
           <div className="grid lg:grid-cols-2 gap-12 items-end">
 
             <div>
@@ -472,15 +442,11 @@ export default function Home() {
               </span>
 
               <h2 className="font-[Fraunces] text-6xl sm:text-7xl lg:text-8xl leading-[0.85] mt-5">
-
                 Come hungry.
-
                 <br />
-
                 <span className="italic text-[#E76F51]">
                   Stay awhile.
                 </span>
-
               </h2>
 
             </div>
@@ -494,11 +460,9 @@ export default function Home() {
           </div>
 
 
-          {/* Visual food row */}
+          {/* FEATURE FOOD */}
 
           <div className="grid md:grid-cols-3 gap-5 mt-16">
-
-            {/* Burger */}
 
             <div className="group relative h-[360px] rounded-[2rem] overflow-hidden">
 
@@ -531,8 +495,6 @@ export default function Home() {
             </div>
 
 
-            {/* Fries */}
-
             <div className="group relative h-[360px] rounded-[2rem] overflow-hidden">
 
               <Image
@@ -563,8 +525,6 @@ export default function Home() {
 
             </div>
 
-
-            {/* Milk Tea */}
 
             <div className="group relative h-[360px] rounded-[2rem] overflow-hidden">
 
@@ -599,7 +559,7 @@ export default function Home() {
           </div>
 
 
-          {/* Menu categories */}
+          {/* MENU LIST */}
 
           <div className="mt-24 space-y-20">
 
@@ -666,7 +626,7 @@ export default function Home() {
           </div>
 
 
-          {/* Counter ambiance */}
+          {/* COUNTER */}
 
           <div className="grid lg:grid-cols-2 gap-8 items-center mt-24">
 
@@ -689,15 +649,11 @@ export default function Home() {
               </span>
 
               <h3 className="font-[Fraunces] text-5xl sm:text-6xl leading-[0.9] mt-5">
-
                 Made with
-
                 <br />
-
                 <span className="italic text-[#E76F51]">
                   intention.
                 </span>
-
               </h3>
 
               <p className="mt-7 text-[#071A2B]/60 max-w-md leading-relaxed">
@@ -758,15 +714,11 @@ export default function Home() {
           </span>
 
           <h2 className="font-[Fraunces] italic text-5xl sm:text-6xl lg:text-8xl leading-[0.9] mt-5 max-w-4xl">
-
             The night stays
-
             <br />
-
             <span className="text-[#F4A261]">
               lit.
             </span>
-
           </h2>
 
           <p className="mt-8 text-[#F6E7D8]/55 max-w-lg leading-relaxed">
@@ -775,40 +727,19 @@ export default function Home() {
           </p>
 
 
-          {/* Night gallery */}
+          {/* NIGHT GALLERY */}
 
           <div className="grid lg:grid-cols-5 gap-5 mt-16">
 
-            {/* Cottage */}
+            {/* CAFE 4 — NIGHT */}
 
             <div className="relative h-[350px] lg:h-[520px] lg:col-span-3 rounded-3xl overflow-hidden border border-white/10">
 
               <Image
-                src="/images/cafe 11.jpg"
-                alt="Cafe cottage at night"
-                fill
-                sizes="(max-width: 1024px) 100vw, 60vw"
-                className="object-cover transition-transform duration-1000 hover:scale-105"
-              />
-
-              <div className="absolute inset-0 bg-gradient-to-t from-[#071A2B]/70 via-transparent to-transparent" />
-
-              <span className="absolute bottom-6 left-6 font-[IBM_Plex_Mono] text-[9px] tracking-[0.2em] uppercase text-white/70">
-                Night at the cottage
-              </span>
-
-            </div>
-
-
-            {/* Cafe 6 */}
-
-            <div className="relative h-[350px] lg:h-[520px] lg:col-span-2 rounded-3xl overflow-hidden border border-white/10">
-
-              <Image
-                src="/images/cafe6.jpg"
+                src="/images/cafe4.jpg"
                 alt="Cafe atmosphere at night"
                 fill
-                sizes="(max-width: 1024px) 100vw, 40vw"
+                sizes="(max-width: 1024px) 100vw, 60vw"
                 className="object-cover transition-transform duration-1000 hover:scale-105"
               />
 
@@ -820,10 +751,31 @@ export default function Home() {
 
             </div>
 
+
+            {/* CAFE 11 — COTTAGE */}
+
+            <div className="relative h-[350px] lg:h-[520px] lg:col-span-2 rounded-3xl overflow-hidden border border-white/10">
+
+              <Image
+                src="/images/cafe 11.jpg"
+                alt="Cafe cottage at night"
+                fill
+                sizes="(max-width: 1024px) 100vw, 40vw"
+                className="object-cover transition-transform duration-1000 hover:scale-105"
+              />
+
+              <div className="absolute inset-0 bg-gradient-to-t from-[#071A2B]/70 via-transparent to-transparent" />
+
+              <span className="absolute bottom-6 left-6 font-[IBM_Plex_Mono] text-[9px] tracking-[0.2em] uppercase text-white/70">
+                Night at the cottage
+              </span>
+
+            </div>
+
           </div>
 
 
-          {/* Smaller gallery */}
+          {/* SMALLER NIGHT GALLERY */}
 
           <div className="grid sm:grid-cols-2 gap-5 mt-5">
 
@@ -849,8 +801,8 @@ export default function Home() {
             <div className="relative h-[300px] rounded-3xl overflow-hidden border border-white/10">
 
               <Image
-                src="/images/cafe4.jpg"
-                alt="Cafe atmosphere"
+                src="/images/cafe 9.jpg"
+                alt="Cafe drink"
                 fill
                 sizes="(max-width: 640px) 100vw, 50vw"
                 className="object-cover transition-transform duration-1000 hover:scale-105"
@@ -859,7 +811,7 @@ export default function Home() {
               <div className="absolute inset-0 bg-gradient-to-t from-[#071A2B]/70 via-transparent to-transparent" />
 
               <span className="absolute bottom-6 left-6 font-[IBM_Plex_Mono] text-[9px] tracking-[0.2em] uppercase text-white/70">
-                Slow moments
+                One more drink
               </span>
 
             </div>
@@ -867,7 +819,7 @@ export default function Home() {
           </div>
 
 
-          {/* Closing */}
+          {/* CLOSING */}
 
           <div className="mt-20 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-8 border-t border-white/10 pt-10">
 
