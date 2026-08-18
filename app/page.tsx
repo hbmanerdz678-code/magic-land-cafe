@@ -805,7 +805,7 @@ export default function Home() {
             <div className="relative h-[350px] lg:h-[520px] lg:col-span-2 rounded-3xl overflow-hidden border border-white/10">
 
               <Image
-                src="/images/cafe 6.jpg"
+                src="/images/cafe6.jpg"
                 alt="Cafe atmosphere at night"
                 fill
                 sizes="(max-width: 1024px) 100vw, 40vw"
@@ -849,7 +849,7 @@ export default function Home() {
             <div className="relative h-[300px] rounded-3xl overflow-hidden border border-white/10">
 
               <Image
-                src="/images/cafe 4.jpg"
+                src="/images/cafe4.jpg"
                 alt="Cafe atmosphere"
                 fill
                 sizes="(max-width: 640px) 100vw, 50vw"
