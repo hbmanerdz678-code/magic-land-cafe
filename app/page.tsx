@@ -112,9 +112,7 @@ export default function Home() {
     );
 
     Object.values(refs.current).forEach((element) => {
-      if (element) {
-        observer.observe(element);
-      }
+      if (element) observer.observe(element);
     });
 
     return () => observer.disconnect();
@@ -127,7 +125,7 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen overflow-hidden bg-[#071A2B] text-[#F6E7D8] font-[Work_Sans]">
+    <main className="min-h-screen overflow-hidden bg-[#071A2B] text-[#F6E7D8]">
 
       {/* =====================================================
           TIME RAIL
@@ -150,7 +148,7 @@ export default function Home() {
             />
 
             <span
-              className={`font-[IBM_Plex_Mono] text-[10px] tracking-[0.15em] uppercase transition-all duration-500 ${
+              className={`font-mono text-[10px] tracking-[0.15em] uppercase transition-all duration-500 ${
                 active === section.id
                   ? "opacity-100 text-[#F4A261]"
                   : "opacity-0 group-hover:opacity-70"
@@ -162,9 +160,8 @@ export default function Home() {
         ))}
       </div>
 
-
       {/* =====================================================
-          HERO
+          HERO — FIRST LIGHT
       ===================================================== */}
 
       <section
@@ -172,81 +169,99 @@ export default function Home() {
         ref={(element) => {
           refs.current.hero = element;
         }}
-        className="relative min-h-screen w-full flex items-end overflow-hidden"
+        className="relative min-h-screen w-full overflow-hidden"
       >
+
+        {/* Main café photograph */}
+
         <Image
           src="/images/cafe-lights.jpg"
           alt="Warm cafe lights"
           fill
           priority
           sizes="100vw"
-          className="object-cover scale-105"
+          className="object-cover object-center"
         />
 
-        <div className="absolute inset-0 bg-gradient-to-b from-[#071A2B]/30 via-[#071A2B]/20 to-[#071A2B]" />
+        {/* Gentle darkening for readability */}
 
-        <div className="absolute inset-0 bg-gradient-to-r from-[#071A2B]/80 via-transparent to-[#E76F51]/10" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#071A2B]/70 via-[#071A2B]/10 to-[#071A2B]/60" />
 
-        <div className="absolute -right-40 top-20 h-[500px] w-[500px] rounded-full bg-[#F4A261]/15 blur-[120px]" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#071A2B]/65 via-transparent to-transparent" />
 
-        <div className="absolute left-1/3 bottom-0 h-[300px] w-[600px] rounded-full bg-[#E76F51]/10 blur-[100px]" />
+        {/* HERO CONTENT
+            Positioned higher so the café lights remain visible. */}
 
-        <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-[#071A2B] to-transparent" />
+        <div className="relative z-10 min-h-screen flex items-start">
 
-        <div className="relative z-10 px-8 sm:px-16 lg:px-24 pb-20 sm:pb-24 max-w-6xl">
+          <div className="px-8 sm:px-16 lg:px-24 pt-[14vh] sm:pt-[16vh] lg:pt-[18vh] max-w-5xl">
 
-          <div className="mb-6 flex items-center gap-4">
-            <div className="h-px w-12 bg-[#F4A261]" />
+            <div className="flex items-center gap-4 mb-6">
 
-            <span className="font-[IBM_Plex_Mono] text-[#F4A261] text-[11px] tracking-[0.3em] uppercase">
-              07:30 — First Light
-            </span>
-          </div>
+              <div className="h-px w-12 bg-[#F4A261]" />
 
-          <h1 className="font-[Fraunces] italic text-6xl sm:text-7xl lg:text-8xl xl:text-9xl leading-[0.88] tracking-tight text-[#F6E7D8]">
-            Where the
-            <br />
-            <span className="text-[#F4A261]">day</span>{" "}
-            begins.
-          </h1>
-
-          <p className="mt-8 text-base sm:text-lg text-[#F6E7D8]/70 max-w-xl leading-relaxed">
-            Coffee, ocean air, mountain light, and a place to slow down.
-            Follow the café from first light to the last glow of the evening.
-          </p>
-
-          <div className="mt-10 flex items-center gap-6">
-            <button
-              onClick={() => scrollToSection("morning")}
-              className="group flex items-center gap-4 rounded-full border border-[#F6E7D8]/20 bg-[#F6E7D8]/5 backdrop-blur-md px-6 py-3 text-sm transition-all duration-500 hover:bg-[#F4A261] hover:text-[#071A2B]"
-            >
-              Explore the day
-
-              <span className="transition-transform duration-300 group-hover:translate-y-1">
-                ↓
+              <span className="font-mono text-[#F4A261] text-[11px] tracking-[0.3em] uppercase">
+                07:30 — First Light
               </span>
-            </button>
 
-            <span className="hidden sm:block font-[IBM_Plex_Mono] text-[10px] tracking-[0.2em] uppercase text-[#F6E7D8]/40">
-              Cebu · Philippines
-            </span>
+            </div>
+
+            <h1 className="font-serif italic text-6xl sm:text-7xl lg:text-8xl xl:text-9xl leading-[0.86] tracking-tight text-[#F6E7D8] max-w-4xl">
+              Where the
+              <br />
+              <span className="text-[#F4A261]">
+                day begins.
+              </span>
+            </h1>
+
+            <p className="mt-8 text-base sm:text-lg text-[#F6E7D8]/75 max-w-xl leading-relaxed">
+              Coffee, ocean air, mountain light, and a place to slow down.
+              Follow the café from first light to the last glow of the evening.
+            </p>
+
+            <div className="mt-9 flex items-center gap-6">
+
+              <button
+                onClick={() => scrollToSection("morning")}
+                className="group flex items-center gap-4 rounded-full border border-[#F6E7D8]/25 bg-[#071A2B]/20 backdrop-blur-md px-6 py-3 text-sm transition-all duration-500 hover:bg-[#F4A261] hover:text-[#071A2B]"
+              >
+                Explore the day
+
+                <span className="transition-transform duration-300 group-hover:translate-y-1">
+                  ↓
+                </span>
+              </button>
+
+              <span className="hidden sm:block font-mono text-[10px] tracking-[0.2em] uppercase text-[#F6E7D8]/50">
+                Cebu · Philippines
+              </span>
+
+            </div>
+
           </div>
 
         </div>
 
-        <div className="absolute bottom-8 right-8 sm:right-16 flex flex-col items-center gap-2 text-[#F6E7D8]/40">
-          <span className="font-[IBM_Plex_Mono] text-[9px] tracking-[0.2em] uppercase [writing-mode:vertical-rl]">
+        {/* Bottom fade */}
+
+        <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-[#071A2B] to-transparent pointer-events-none" />
+
+        {/* Scroll indicator */}
+
+        <div className="absolute bottom-8 right-8 sm:right-16 flex flex-col items-center gap-2 text-[#F6E7D8]/50">
+
+          <span className="font-mono text-[9px] tracking-[0.2em] uppercase [writing-mode:vertical-rl]">
             Scroll
           </span>
 
           <div className="h-12 w-px bg-gradient-to-b from-[#F4A261] to-transparent" />
+
         </div>
 
       </section>
 
-
       {/* =====================================================
-          MORNING
+          MORNING — OCEAN MORNING
       ===================================================== */}
 
       <section
@@ -254,45 +269,18 @@ export default function Home() {
         ref={(element) => {
           refs.current.morning = element;
         }}
-        className="relative min-h-screen overflow-hidden bg-[#F6E7D8] text-[#071A2B]"
+        className="relative overflow-hidden bg-[#F6E7D8] text-[#071A2B]"
       >
 
-        <div className="absolute -top-40 -right-40 h-[500px] w-[500px] rounded-full bg-[#087E8B]/10 blur-[120px]" />
+        <div className="relative z-10 px-8 sm:px-16 lg:px-24 py-28 sm:py-32 max-w-7xl mx-auto">
 
-        <div className="relative z-10 grid lg:grid-cols-2 min-h-screen">
+          <div className="mb-14">
 
-          {/* LIGHT MORNING IMAGE */}
-
-          <div className="relative min-h-[55vh] lg:min-h-screen overflow-hidden">
-
-            <Image
-              src="/images/cafe6.jpg"
-              alt="Bright morning cafe atmosphere"
-              fill
-              sizes="(max-width: 1024px) 100vw, 50vw"
-              className="object-cover transition-transform duration-1000 hover:scale-105"
-            />
-
-            <div className="absolute inset-0 bg-gradient-to-t from-[#071A2B]/30 via-transparent to-[#087E8B]/5" />
-
-            <div className="absolute bottom-8 left-8 rounded-full border border-white/20 bg-[#071A2B]/30 backdrop-blur-md px-4 py-2">
-              <span className="font-[IBM_Plex_Mono] text-[9px] tracking-[0.2em] uppercase text-white/80">
-                Morning light
-              </span>
-            </div>
-
-          </div>
-
-
-          {/* TEXT */}
-
-          <div className="relative flex flex-col justify-center px-8 sm:px-16 lg:px-24 py-20">
-
-            <span className="font-[IBM_Plex_Mono] text-[#087E8B] text-[10px] tracking-[0.3em] uppercase">
+            <span className="font-mono text-[#087E8B] text-[10px] tracking-[0.3em] uppercase">
               09:15 — Ocean Morning
             </span>
 
-            <h2 className="font-[Fraunces] text-5xl sm:text-6xl lg:text-7xl leading-[0.95] mt-5">
+            <h2 className="font-serif text-5xl sm:text-6xl lg:text-7xl leading-[0.9] mt-5 max-w-3xl">
               Slow mornings.
               <br />
               <span className="italic text-[#087E8B]">
@@ -300,32 +288,78 @@ export default function Home() {
               </span>
             </h2>
 
-            <p className="mt-8 max-w-md text-[#071A2B]/65 leading-relaxed">
+            <p className="mt-7 max-w-xl text-[#071A2B]/60 leading-relaxed">
               Sunlight spills across the table. The first cup arrives warm.
               Outside, the world is still finding its rhythm.
             </p>
 
-            <div className="mt-12 grid grid-cols-2 gap-3 max-w-md">
+          </div>
 
-              <div className="rounded-2xl border border-[#071A2B]/10 bg-white/30 p-5">
-                <span className="font-[IBM_Plex_Mono] text-[9px] tracking-[0.2em] uppercase text-[#071A2B]/40">
-                  Atmosphere
-                </span>
+          {/* MORNING PHOTO GRID */}
 
-                <p className="mt-2 font-[Fraunces] text-xl">
-                  Bright & warm
-                </p>
-              </div>
+          <div className="grid lg:grid-cols-5 gap-5">
 
-              <div className="rounded-2xl border border-[#071A2B]/10 bg-white/30 p-5">
-                <span className="font-[IBM_Plex_Mono] text-[9px] tracking-[0.2em] uppercase text-[#071A2B]/40">
-                  Best with
-                </span>
+            <div className="relative h-[520px] lg:col-span-3 rounded-[2rem] overflow-hidden group">
 
-                <p className="mt-2 font-[Fraunces] text-xl">
-                  Your first cup
-                </p>
-              </div>
+              <Image
+                src="/images/cafe6.jpg"
+                alt="Ocean morning cafe"
+                fill
+                sizes="(max-width: 1024px) 100vw, 60vw"
+                className="object-cover transition-transform duration-1000 group-hover:scale-105"
+              />
+
+              <div className="absolute inset-0 bg-gradient-to-t from-[#071A2B]/60 via-transparent to-transparent" />
+
+              <span className="absolute left-6 bottom-6 font-mono text-[9px] tracking-[0.2em] uppercase text-white/80">
+                Ocean morning
+              </span>
+
+            </div>
+
+            <div className="relative h-[520px] lg:col-span-2 rounded-[2rem] overflow-hidden group">
+
+              <Image
+                src="/images/pathway-noon.jpg"
+                alt="Bright pathway at noon"
+                fill
+                sizes="(max-width: 1024px) 100vw, 40vw"
+                className="object-cover transition-transform duration-1000 group-hover:scale-105"
+              />
+
+              <div className="absolute inset-0 bg-gradient-to-t from-[#071A2B]/60 via-transparent to-transparent" />
+
+              <span className="absolute left-6 bottom-6 font-mono text-[9px] tracking-[0.2em] uppercase text-white/80">
+                Noon light
+              </span>
+
+            </div>
+
+          </div>
+
+          <div className="grid sm:grid-cols-2 gap-4 mt-6 max-w-2xl">
+
+            <div className="rounded-2xl border border-[#071A2B]/10 bg-white/30 p-5">
+
+              <span className="font-mono text-[9px] tracking-[0.2em] uppercase text-[#071A2B]/40">
+                Atmosphere
+              </span>
+
+              <p className="mt-2 font-serif text-xl">
+                Bright & warm
+              </p>
+
+            </div>
+
+            <div className="rounded-2xl border border-[#071A2B]/10 bg-white/30 p-5">
+
+              <span className="font-mono text-[9px] tracking-[0.2em] uppercase text-[#071A2B]/40">
+                Best with
+              </span>
+
+              <p className="mt-2 font-serif text-xl">
+                Your first cup
+              </p>
 
             </div>
 
@@ -334,7 +368,6 @@ export default function Home() {
         </div>
 
       </section>
-
 
       {/* =====================================================
           GOLDEN HOUR
@@ -345,24 +378,18 @@ export default function Home() {
         ref={(element) => {
           refs.current.golden = element;
         }}
-        className="relative min-h-screen overflow-hidden text-[#071A2B]"
+        className="relative overflow-hidden bg-[#E76F51] text-[#071A2B]"
       >
 
-        <div className="absolute inset-0 bg-gradient-to-br from-[#F4A261] via-[#E76F51] to-[#40334E]" />
+        <div className="relative z-10 px-8 sm:px-16 lg:px-24 py-28 sm:py-32 max-w-7xl mx-auto">
 
-        <div className="absolute -right-32 -top-32 h-[500px] w-[500px] rounded-full bg-[#FFE8A3]/25 blur-[100px]" />
+          <div className="max-w-3xl mb-14">
 
-        <div className="absolute left-0 bottom-0 h-[300px] w-[600px] bg-[#40334E]/20 blur-[100px]" />
-
-        <div className="relative z-10 grid lg:grid-cols-2 min-h-screen">
-
-          <div className="flex flex-col justify-center px-8 sm:px-16 lg:px-24 py-20 order-2 lg:order-1">
-
-            <span className="font-[IBM_Plex_Mono] text-[#071A2B]/60 text-[10px] tracking-[0.3em] uppercase">
+            <span className="font-mono text-[#071A2B]/60 text-[10px] tracking-[0.3em] uppercase">
               17:45 — Golden Hour
             </span>
 
-            <h2 className="font-[Fraunces] text-5xl sm:text-6xl lg:text-7xl leading-[0.9] mt-5">
+            <h2 className="font-serif text-5xl sm:text-6xl lg:text-8xl leading-[0.88] mt-5">
               When the sky
               <br />
               <span className="italic text-[#FFE8A3]">
@@ -370,42 +397,139 @@ export default function Home() {
               </span>
             </h2>
 
-            <p className="mt-8 max-w-md text-[#071A2B]/70 leading-relaxed">
+            <p className="mt-8 max-w-xl text-[#071A2B]/70 leading-relaxed">
               The tables move outside. The mountains disappear into the
               horizon. Every drink catches a little piece of the setting sun.
             </p>
 
-            <div className="mt-10 flex items-center gap-3">
+          </div>
 
-              <div className="w-10 h-10 rounded-full border border-[#071A2B]/20 flex items-center justify-center">
-                ☀
-              </div>
+          {/* MAIN SUNSET */}
 
-              <span className="font-[IBM_Plex_Mono] text-[10px] tracking-[0.15em] uppercase">
-                Golden hour ritual
+          <div className="relative h-[55vh] min-h-[420px] max-h-[700px] rounded-[2rem] overflow-hidden group">
+
+            <Image
+              src="/images/pathway-sunset.jpg"
+              alt="Pathway during sunset"
+              fill
+              sizes="100vw"
+              className="object-cover transition-transform duration-[1200ms] group-hover:scale-105"
+            />
+
+            <div className="absolute inset-0 bg-gradient-to-t from-[#071A2B]/70 via-transparent to-transparent" />
+
+            <div className="absolute bottom-7 left-7">
+
+              <span className="font-mono text-[9px] tracking-[0.2em] uppercase text-white/70">
+                The golden path
+              </span>
+
+              <h3 className="font-serif italic text-3xl sm:text-4xl text-white mt-2">
+                The last warm light.
+              </h3>
+
+            </div>
+
+          </div>
+
+          {/* SUNSET GALLERY */}
+
+          <div className="grid md:grid-cols-3 gap-5 mt-5">
+
+            <div className="relative h-[380px] rounded-[2rem] overflow-hidden group">
+
+              <Image
+                src="/images/sunset3.jpg"
+                alt="Early sunset"
+                fill
+                sizes="(max-width: 768px) 100vw, 33vw"
+                className="object-cover transition-transform duration-1000 group-hover:scale-105"
+              />
+
+              <div className="absolute inset-0 bg-gradient-to-t from-[#071A2B]/60 via-transparent to-transparent" />
+
+              <span className="absolute left-6 bottom-6 font-mono text-[9px] tracking-[0.2em] uppercase text-white/80">
+                Early sunset
+              </span>
+
+            </div>
+
+            <div className="relative h-[380px] rounded-[2rem] overflow-hidden group">
+
+              <Image
+                src="/images/sunset5.jpg"
+                alt="Sunset with clouds"
+                fill
+                sizes="(max-width: 768px) 100vw, 33vw"
+                className="object-cover transition-transform duration-1000 group-hover:scale-105"
+              />
+
+              <div className="absolute inset-0 bg-gradient-to-t from-[#071A2B]/60 via-transparent to-transparent" />
+
+              <span className="absolute left-6 bottom-6 font-mono text-[9px] tracking-[0.2em] uppercase text-white/80">
+                Between the clouds
+              </span>
+
+            </div>
+
+            <div className="relative h-[380px] rounded-[2rem] overflow-hidden group">
+
+              <Image
+                src="/images/sunset4.jpg"
+                alt="Balcony overlooking sunset"
+                fill
+                sizes="(max-width: 768px) 100vw, 33vw"
+                className="object-cover transition-transform duration-1000 group-hover:scale-105"
+              />
+
+              <div className="absolute inset-0 bg-gradient-to-t from-[#071A2B]/70 via-transparent to-transparent" />
+
+              <span className="absolute left-6 bottom-6 font-mono text-[9px] tracking-[0.2em] uppercase text-white/80">
+                From the balcony
               </span>
 
             </div>
 
           </div>
 
+          {/* DUSK */}
 
-          <div className="relative min-h-[55vh] lg:min-h-screen order-1 lg:order-2 overflow-hidden">
+          <div className="grid md:grid-cols-2 gap-5 mt-5">
 
-            <Image
-              src="/images/cafe 7.jpg"
-              alt="Mountain view from the cafe"
-              fill
-              sizes="(max-width: 1024px) 100vw, 50vw"
-              className="object-cover transition-transform duration-1000 hover:scale-105"
-            />
+            <div className="relative h-[330px] rounded-[2rem] overflow-hidden group">
 
-            <div className="absolute inset-0 bg-gradient-to-l from-transparent via-transparent to-[#E76F51]/30" />
+              <Image
+                src="/images/sunset2.jpg"
+                alt="Light sunset"
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw"
+                className="object-cover transition-transform duration-1000 group-hover:scale-105"
+              />
 
-            <div className="absolute bottom-8 right-8 rounded-full border border-white/20 bg-[#071A2B]/30 backdrop-blur-md px-4 py-2">
-              <span className="font-[IBM_Plex_Mono] text-[9px] tracking-[0.2em] uppercase text-white/80">
-                Mountain view
+              <div className="absolute inset-0 bg-gradient-to-t from-[#071A2B]/60 via-transparent to-transparent" />
+
+              <span className="absolute left-6 bottom-6 font-mono text-[9px] tracking-[0.2em] uppercase text-white/80">
+                Dusk begins
               </span>
+
+            </div>
+
+            <div className="relative h-[330px] rounded-[2rem] overflow-hidden group">
+
+              <Image
+                src="/images/sunset1.jpg"
+                alt="Almost dark sunset"
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw"
+                className="object-cover transition-transform duration-1000 group-hover:scale-105"
+              />
+
+              <div className="absolute inset-0 bg-gradient-to-t from-[#071A2B]/70 via-transparent to-transparent" />
+
+              <span className="absolute left-6 bottom-6 font-mono text-[9px] tracking-[0.2em] uppercase text-white/80">
+                Almost night
+              </span>
+
             </div>
 
           </div>
@@ -413,7 +537,6 @@ export default function Home() {
         </div>
 
       </section>
-
 
       {/* =====================================================
           MENU
@@ -427,21 +550,17 @@ export default function Home() {
         className="relative overflow-hidden bg-[#F6E7D8] text-[#071A2B] px-8 sm:px-16 lg:px-24 py-28 sm:py-32"
       >
 
-        <div className="absolute -top-40 -left-40 h-[500px] w-[500px] rounded-full bg-[#087E8B]/10 blur-[120px]" />
-
-        <div className="absolute right-0 bottom-0 h-[500px] w-[500px] rounded-full bg-[#F4A261]/10 blur-[120px]" />
-
         <div className="relative z-10 max-w-6xl mx-auto">
 
           <div className="grid lg:grid-cols-2 gap-12 items-end">
 
             <div>
 
-              <span className="font-[IBM_Plex_Mono] text-[#087E8B] text-[10px] tracking-[0.3em] uppercase">
+              <span className="font-mono text-[#087E8B] text-[10px] tracking-[0.3em] uppercase">
                 19:30 — The Table
               </span>
 
-              <h2 className="font-[Fraunces] text-6xl sm:text-7xl lg:text-8xl leading-[0.85] mt-5">
+              <h2 className="font-serif text-6xl sm:text-7xl lg:text-8xl leading-[0.85] mt-5">
                 Come hungry.
                 <br />
                 <span className="italic text-[#E76F51]">
@@ -458,7 +577,6 @@ export default function Home() {
             </p>
 
           </div>
-
 
           {/* FEATURE FOOD */}
 
@@ -478,22 +596,21 @@ export default function Home() {
 
               <div className="absolute left-6 bottom-6">
 
-                <span className="font-[IBM_Plex_Mono] text-[9px] tracking-[0.2em] uppercase text-white/60">
+                <span className="font-mono text-[9px] tracking-[0.2em] uppercase text-white/60">
                   From the kitchen
                 </span>
 
-                <h3 className="font-[Fraunces] text-3xl text-white mt-2">
+                <h3 className="font-serif text-3xl text-white mt-2">
                   Café Burger
                 </h3>
 
-                <span className="font-[IBM_Plex_Mono] text-sm text-[#F4A261] mt-2 block">
+                <span className="font-mono text-sm text-[#F4A261] mt-2 block">
                   ₱250
                 </span>
 
               </div>
 
             </div>
-
 
             <div className="group relative h-[360px] rounded-[2rem] overflow-hidden">
 
@@ -509,15 +626,15 @@ export default function Home() {
 
               <div className="absolute left-6 bottom-6">
 
-                <span className="font-[IBM_Plex_Mono] text-[9px] tracking-[0.2em] uppercase text-white/60">
+                <span className="font-mono text-[9px] tracking-[0.2em] uppercase text-white/60">
                   For sharing
                 </span>
 
-                <h3 className="font-[Fraunces] text-3xl text-white mt-2">
+                <h3 className="font-serif text-3xl text-white mt-2">
                   Crispy Fries
                 </h3>
 
-                <span className="font-[IBM_Plex_Mono] text-sm text-[#F4A261] mt-2 block">
+                <span className="font-mono text-sm text-[#F4A261] mt-2 block">
                   ₱150
                 </span>
 
@@ -525,12 +642,11 @@ export default function Home() {
 
             </div>
 
-
             <div className="group relative h-[360px] rounded-[2rem] overflow-hidden">
 
               <Image
                 src="/images/cafe 9.jpg"
-                alt="Milk tea"
+                alt="Signature milk tea"
                 fill
                 sizes="(max-width: 768px) 100vw, 33vw"
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
@@ -540,15 +656,15 @@ export default function Home() {
 
               <div className="absolute left-6 bottom-6">
 
-                <span className="font-[IBM_Plex_Mono] text-[9px] tracking-[0.2em] uppercase text-white/60">
+                <span className="font-mono text-[9px] tracking-[0.2em] uppercase text-white/60">
                   Cold & creamy
                 </span>
 
-                <h3 className="font-[Fraunces] text-3xl text-white mt-2">
+                <h3 className="font-serif text-3xl text-white mt-2">
                   Signature Milk Tea
                 </h3>
 
-                <span className="font-[IBM_Plex_Mono] text-sm text-[#F4A261] mt-2 block">
+                <span className="font-mono text-sm text-[#F4A261] mt-2 block">
                   ₱170
                 </span>
 
@@ -557,7 +673,6 @@ export default function Home() {
             </div>
 
           </div>
-
 
           {/* MENU LIST */}
 
@@ -571,22 +686,21 @@ export default function Home() {
 
                   <div>
 
-                    <h3 className="font-[Fraunces] text-4xl sm:text-5xl">
+                    <h3 className="font-serif text-4xl sm:text-5xl">
                       {category.name}
                     </h3>
 
-                    <p className="font-[IBM_Plex_Mono] text-[9px] tracking-[0.18em] uppercase text-[#071A2B]/40 mt-2">
+                    <p className="font-mono text-[9px] tracking-[0.18em] uppercase text-[#071A2B]/40 mt-2">
                       {category.subtitle}
                     </p>
 
                   </div>
 
-                  <span className="font-[IBM_Plex_Mono] text-[9px] tracking-[0.18em] uppercase text-[#071A2B]/30">
+                  <span className="font-mono text-[9px] tracking-[0.18em] uppercase text-[#071A2B]/30">
                     Our selection
                   </span>
 
                 </div>
-
 
                 <div className="grid sm:grid-cols-2 gap-x-10">
 
@@ -599,7 +713,7 @@ export default function Home() {
 
                       <div>
 
-                        <h4 className="font-[Fraunces] text-xl sm:text-2xl group-hover:text-[#E76F51] transition-colors duration-300">
+                        <h4 className="font-serif text-xl sm:text-2xl group-hover:text-[#E76F51] transition-colors duration-300">
                           {item.name}
                         </h4>
 
@@ -609,7 +723,7 @@ export default function Home() {
 
                       </div>
 
-                      <span className="shrink-0 font-[IBM_Plex_Mono] text-sm text-[#087E8B] pt-1">
+                      <span className="shrink-0 font-mono text-sm text-[#087E8B] pt-1">
                         {item.price}
                       </span>
 
@@ -625,7 +739,6 @@ export default function Home() {
 
           </div>
 
-
           {/* COUNTER */}
 
           <div className="grid lg:grid-cols-2 gap-8 items-center mt-24">
@@ -634,7 +747,7 @@ export default function Home() {
 
               <Image
                 src="/images/cafe 12.jpg"
-                alt="Cafe counter ambiance"
+                alt="Cafe counter"
                 fill
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 className="object-cover transition-transform duration-1000 hover:scale-105"
@@ -644,11 +757,11 @@ export default function Home() {
 
             <div className="lg:px-10">
 
-              <span className="font-[IBM_Plex_Mono] text-[#087E8B] text-[10px] tracking-[0.3em] uppercase">
+              <span className="font-mono text-[#087E8B] text-[10px] tracking-[0.3em] uppercase">
                 Behind the counter
               </span>
 
-              <h3 className="font-[Fraunces] text-5xl sm:text-6xl leading-[0.9] mt-5">
+              <h3 className="font-serif text-5xl sm:text-6xl leading-[0.9] mt-5">
                 Made with
                 <br />
                 <span className="italic text-[#E76F51]">
@@ -663,7 +776,7 @@ export default function Home() {
 
               <button
                 onClick={() => scrollToSection("night")}
-                className="mt-8 group flex items-center gap-3 rounded-full bg-[#071A2B] text-[#F6E7D8] px-6 py-3 font-[IBM_Plex_Mono] text-[10px] tracking-[0.15em] uppercase transition-all duration-300 hover:bg-[#F4A261] hover:text-[#071A2B]"
+                className="mt-8 group flex items-center gap-3 rounded-full bg-[#071A2B] text-[#F6E7D8] px-6 py-3 font-mono text-[10px] tracking-[0.15em] uppercase transition-all duration-300 hover:bg-[#F4A261] hover:text-[#071A2B]"
               >
                 Continue into the night
 
@@ -677,10 +790,9 @@ export default function Home() {
 
           </div>
 
-
           <div className="mt-20 border-t border-[#071A2B]/10 pt-8">
 
-            <p className="font-[IBM_Plex_Mono] text-[9px] tracking-[0.15em] uppercase text-[#071A2B]/40">
+            <p className="font-mono text-[9px] tracking-[0.15em] uppercase text-[#071A2B]/40">
               Prices are placeholders · Menu to be updated
             </p>
 
@@ -690,9 +802,8 @@ export default function Home() {
 
       </section>
 
-
       {/* =====================================================
-          NIGHT
+          AFTER DARK
       ===================================================== */}
 
       <section
@@ -700,20 +811,16 @@ export default function Home() {
         ref={(element) => {
           refs.current.night = element;
         }}
-        className="relative min-h-screen overflow-hidden bg-[#071A2B] px-8 sm:px-16 lg:px-24 py-24"
+        className="relative overflow-hidden bg-[#071A2B] px-8 sm:px-16 lg:px-24 py-28 sm:py-32"
       >
-
-        <div className="absolute top-20 right-10 h-[400px] w-[400px] rounded-full bg-[#40334E]/30 blur-[120px]" />
-
-        <div className="absolute bottom-0 left-0 h-[300px] w-[500px] rounded-full bg-[#087E8B]/10 blur-[100px]" />
 
         <div className="relative z-10 max-w-6xl mx-auto">
 
-          <span className="font-[IBM_Plex_Mono] text-[#F4A261] text-[10px] tracking-[0.3em] uppercase">
+          <span className="font-mono text-[#F4A261] text-[10px] tracking-[0.3em] uppercase">
             21:00 — After Dark
           </span>
 
-          <h2 className="font-[Fraunces] italic text-5xl sm:text-6xl lg:text-8xl leading-[0.9] mt-5 max-w-4xl">
+          <h2 className="font-serif italic text-5xl sm:text-6xl lg:text-8xl leading-[0.9] mt-5 max-w-4xl">
             The night stays
             <br />
             <span className="text-[#F4A261]">
@@ -726,98 +833,89 @@ export default function Home() {
             late conversations, good food, and nowhere else you need to be.
           </p>
 
-
-          {/* NIGHT GALLERY */}
+          {/* MAIN NIGHT GALLERY */}
 
           <div className="grid lg:grid-cols-5 gap-5 mt-16">
 
-            {/* CAFE 4 — NIGHT */}
-
-            <div className="relative h-[350px] lg:h-[520px] lg:col-span-3 rounded-3xl overflow-hidden border border-white/10">
+            <div className="relative h-[430px] lg:h-[560px] lg:col-span-3 rounded-3xl overflow-hidden border border-white/10 group">
 
               <Image
-                src="/images/cafe4.jpg"
-                alt="Cafe atmosphere at night"
+                src="/images/pathway-night.jpg"
+                alt="Pathway at night"
                 fill
                 sizes="(max-width: 1024px) 100vw, 60vw"
-                className="object-cover transition-transform duration-1000 hover:scale-105"
+                className="object-cover transition-transform duration-1000 group-hover:scale-105"
               />
 
-              <div className="absolute inset-0 bg-gradient-to-t from-[#071A2B]/70 via-transparent to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#071A2B]/75 via-transparent to-transparent" />
 
-              <span className="absolute bottom-6 left-6 font-[IBM_Plex_Mono] text-[9px] tracking-[0.2em] uppercase text-white/70">
-                Late night atmosphere
+              <span className="absolute bottom-6 left-6 font-mono text-[9px] tracking-[0.2em] uppercase text-white/70">
+                The path after dark
               </span>
 
             </div>
 
-
-            {/* CAFE 11 — COTTAGE */}
-
-            <div className="relative h-[350px] lg:h-[520px] lg:col-span-2 rounded-3xl overflow-hidden border border-white/10">
+            <div className="relative h-[430px] lg:h-[560px] lg:col-span-2 rounded-3xl overflow-hidden border border-white/10 group">
 
               <Image
-                src="/images/cafe 11.jpg"
-                alt="Cafe cottage at night"
+                src="/images/cottagelights.jpg"
+                alt="Cottage lights at night"
                 fill
                 sizes="(max-width: 1024px) 100vw, 40vw"
-                className="object-cover transition-transform duration-1000 hover:scale-105"
+                className="object-cover transition-transform duration-1000 group-hover:scale-105"
               />
 
-              <div className="absolute inset-0 bg-gradient-to-t from-[#071A2B]/70 via-transparent to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#071A2B]/75 via-transparent to-transparent" />
 
-              <span className="absolute bottom-6 left-6 font-[IBM_Plex_Mono] text-[9px] tracking-[0.2em] uppercase text-white/70">
-                Night at the cottage
+              <span className="absolute bottom-6 left-6 font-mono text-[9px] tracking-[0.2em] uppercase text-white/70">
+                Warm lights
               </span>
 
             </div>
 
           </div>
 
-
-          {/* SMALLER NIGHT GALLERY */}
+          {/* SECOND NIGHT GALLERY */}
 
           <div className="grid sm:grid-cols-2 gap-5 mt-5">
 
-            <div className="relative h-[300px] rounded-3xl overflow-hidden border border-white/10">
+            <div className="relative h-[330px] rounded-3xl overflow-hidden border border-white/10 group">
 
               <Image
-                src="/images/cafe 3.jpg"
-                alt="Cafe interior"
+                src="/images/nightcottage.jpg"
+                alt="Cottage at night"
                 fill
                 sizes="(max-width: 640px) 100vw, 50vw"
-                className="object-cover transition-transform duration-1000 hover:scale-105"
+                className="object-cover transition-transform duration-1000 group-hover:scale-105"
               />
 
-              <div className="absolute inset-0 bg-gradient-to-t from-[#071A2B]/70 via-transparent to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#071A2B]/75 via-transparent to-transparent" />
 
-              <span className="absolute bottom-6 left-6 font-[IBM_Plex_Mono] text-[9px] tracking-[0.2em] uppercase text-white/70">
+              <span className="absolute bottom-6 left-6 font-mono text-[9px] tracking-[0.2em] uppercase text-white/70">
                 Somewhere to stay
               </span>
 
             </div>
 
-
-            <div className="relative h-[300px] rounded-3xl overflow-hidden border border-white/10">
+            <div className="relative h-[330px] rounded-3xl overflow-hidden border border-white/10 group">
 
               <Image
-                src="/images/cafe 9.jpg"
-                alt="Cafe drink"
+                src="/images/cafe-lights.jpg"
+                alt="Cafe lights at night"
                 fill
                 sizes="(max-width: 640px) 100vw, 50vw"
-                className="object-cover transition-transform duration-1000 hover:scale-105"
+                className="object-cover transition-transform duration-1000 group-hover:scale-105"
               />
 
-              <div className="absolute inset-0 bg-gradient-to-t from-[#071A2B]/70 via-transparent to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#071A2B]/75 via-transparent to-transparent" />
 
-              <span className="absolute bottom-6 left-6 font-[IBM_Plex_Mono] text-[9px] tracking-[0.2em] uppercase text-white/70">
-                One more drink
+              <span className="absolute bottom-6 left-6 font-mono text-[9px] tracking-[0.2em] uppercase text-white/70">
+                One more glow
               </span>
 
             </div>
 
           </div>
-
 
           {/* CLOSING */}
 
@@ -825,11 +923,11 @@ export default function Home() {
 
             <div>
 
-              <span className="font-[IBM_Plex_Mono] text-[9px] tracking-[0.25em] uppercase text-white/30">
+              <span className="font-mono text-[9px] tracking-[0.25em] uppercase text-white/30">
                 One place · every hour
               </span>
 
-              <p className="font-[Fraunces] italic text-3xl sm:text-4xl mt-3 text-[#F6E7D8]">
+              <p className="font-serif italic text-3xl sm:text-4xl mt-3 text-[#F6E7D8]">
                 Stay a little longer.
               </p>
 
@@ -837,7 +935,7 @@ export default function Home() {
 
             <button
               onClick={() => scrollToSection("hero")}
-              className="rounded-full border border-[#F4A261]/40 px-6 py-3 font-[IBM_Plex_Mono] text-[10px] tracking-[0.2em] uppercase text-[#F4A261] transition-all duration-300 hover:bg-[#F4A261] hover:text-[#071A2B]"
+              className="rounded-full border border-[#F4A261]/40 px-6 py-3 font-mono text-[10px] tracking-[0.2em] uppercase text-[#F4A261] transition-all duration-300 hover:bg-[#F4A261] hover:text-[#071A2B]"
             >
               Back to sunrise ↑
             </button>
@@ -847,7 +945,6 @@ export default function Home() {
         </div>
 
       </section>
-
 
       {/* =====================================================
           FOOTER
@@ -859,17 +956,17 @@ export default function Home() {
 
           <div>
 
-            <span className="font-[Fraunces] italic text-3xl text-[#F6E7D8]">
+            <span className="font-serif italic text-3xl text-[#F6E7D8]">
               Our Café
             </span>
 
-            <p className="font-[IBM_Plex_Mono] text-[9px] tracking-[0.2em] uppercase text-white/30 mt-3">
+            <p className="font-mono text-[9px] tracking-[0.2em] uppercase text-white/30 mt-3">
               Coffee · Ocean · Mountains · Moments
             </p>
 
           </div>
 
-          <div className="font-[IBM_Plex_Mono] text-[9px] tracking-[0.2em] uppercase text-white/40">
+          <div className="font-mono text-[9px] tracking-[0.2em] uppercase text-white/40">
             OPEN DAILY · 07:30 — 23:00
           </div>
 
