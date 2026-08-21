@@ -171,23 +171,15 @@ function ImageCarousel({
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-
       {/* =====================================================
           AMBIENT BACKGROUND
-
-          This fills the side spaces with a soft version
-          of the CURRENT photograph.
-
-          It does NOT change the actual image.
       ===================================================== */}
 
       {images.map((image, index) => (
         <div
           key={`background-${image.src}`}
           className={`absolute inset-0 transition-opacity duration-700 ${
-            index === current
-              ? "opacity-100"
-              : "opacity-0"
+            index === current ? "opacity-100" : "opacity-0"
           }`}
           aria-hidden="true"
         >
@@ -211,8 +203,6 @@ function ImageCarousel({
 
       {/* =====================================================
           AMBIENT LIGHT
-
-          Gives the gallery a softer cinematic appearance.
       ===================================================== */}
 
       <div
@@ -225,25 +215,14 @@ function ImageCarousel({
 
       {/* =====================================================
           ORIGINAL IMAGE
-
-          IMPORTANT:
-
-          object-contain means the ENTIRE image is preserved.
-
-          There is:
-          - NO object-cover
-          - NO scale animation
-          - NO zoom
-          - NO cropping
+          NO ZOOM / NO CROPPING
       ===================================================== */}
 
       {images.map((image, index) => (
         <div
           key={`main-${image.src}`}
           className={`absolute inset-0 flex items-center justify-center p-3 sm:p-5 lg:p-7 transition-opacity duration-700 ease-in-out ${
-            index === current
-              ? "opacity-100"
-              : "opacity-0"
+            index === current ? "opacity-100" : "opacity-0"
           }`}
           aria-hidden={index !== current}
         >
@@ -267,13 +246,11 @@ function ImageCarousel({
       <div className="absolute inset-3 sm:inset-5 lg:inset-7 rounded-[1.25rem] border border-white/10 pointer-events-none" />
 
       {/* =====================================================
-          TOP LEFT PHOTO NUMBER
+          PHOTO NUMBER
       ===================================================== */}
 
       <div className="absolute left-5 top-5 sm:left-7 sm:top-7 z-20">
-
         <div className="flex items-center gap-3">
-
           <span className="font-mono text-[9px] tracking-[0.2em] text-white/65">
             {String(current + 1).padStart(2, "0")}
           </span>
@@ -283,9 +260,7 @@ function ImageCarousel({
           <span className="font-mono text-[9px] tracking-[0.2em] text-white/35">
             {String(images.length).padStart(2, "0")}
           </span>
-
         </div>
-
       </div>
 
       {/* =====================================================
@@ -293,17 +268,13 @@ function ImageCarousel({
       ===================================================== */}
 
       <div className="absolute left-5 bottom-5 sm:left-7 sm:bottom-7 z-20">
-
         <div className="flex items-center gap-3">
-
           <div className="h-px w-6 bg-[#F4A261]" />
 
           <span className="font-mono text-[9px] sm:text-[10px] tracking-[0.22em] uppercase text-white/80 drop-shadow-lg">
             {activeImage.label}
           </span>
-
         </div>
-
       </div>
 
       {/* =====================================================
@@ -311,7 +282,6 @@ function ImageCarousel({
       ===================================================== */}
 
       <div className="absolute right-5 bottom-5 sm:right-7 sm:bottom-7 z-20 flex items-center gap-2">
-
         <button
           type="button"
           onClick={previous}
@@ -329,7 +299,6 @@ function ImageCarousel({
         >
           →
         </button>
-
       </div>
 
       {/* =====================================================
@@ -337,7 +306,6 @@ function ImageCarousel({
       ===================================================== */}
 
       <div className="absolute bottom-6 left-1/2 z-20 -translate-x-1/2 flex items-center gap-1.5">
-
         {images.map((image, index) => (
           <button
             key={`dot-${image.src}`}
@@ -351,9 +319,7 @@ function ImageCarousel({
             }`}
           />
         ))}
-
       </div>
-
     </div>
   );
 }
@@ -403,17 +369,79 @@ export default function Home() {
   const scrollToSection = (id: string) => {
     document.getElementById(id)?.scrollIntoView({
       behavior: "smooth",
+      block: "start",
     });
   };
 
   return (
-    <main className="min-h-screen overflow-hidden bg-[#071A2B] text-[#F6E7D8]">
+    <main className="relative min-h-screen bg-[#071A2B] text-[#F6E7D8]">
+
+      {/* =====================================================
+          FIXED NAVBAR
+
+          IMPORTANT:
+          This is deliberately OUTSIDE the hero.
+
+          It is now its own independent layer so the
+          hero image, gradients, and animations cannot
+          cover it on Vercel.
+      ===================================================== */}
+
+      <nav
+        className="fixed inset-x-0 top-0 z-[9999] px-4 sm:px-6 lg:px-10 pt-4 sm:pt-5 pointer-events-none"
+        style={{
+          isolation: "isolate",
+        }}
+      >
+        <div className="mx-auto max-w-7xl pointer-events-auto">
+
+          <div className="rounded-full border border-white/15 bg-[#071A2B]/35 px-4 sm:px-6 py-3 backdrop-blur-xl shadow-[0_10px_40px_rgba(0,0,0,0.18)]">
+
+            <div className="flex items-center justify-between gap-3">
+
+              {/* LOGO */}
+
+              <button
+                type="button"
+                onClick={() => scrollToSection("hero")}
+                className="relative z-10 shrink-0 font-serif italic text-lg sm:text-xl text-[#F6E7D8]/95 transition-opacity duration-300 hover:opacity-70"
+              >
+                Magic Land
+              </button>
+
+              {/* NAVIGATION */}
+
+              <div className="flex min-w-0 items-center gap-1 sm:gap-2 overflow-x-auto scrollbar-hide">
+
+                {sections.map((section) => (
+                  <button
+                    key={section.id}
+                    type="button"
+                    onClick={() => scrollToSection(section.id)}
+                    className={`relative z-10 shrink-0 rounded-full px-3 sm:px-4 py-2 font-mono text-[9px] sm:text-[10px] tracking-[0.12em] uppercase transition-all duration-300 ${
+                      active === section.id
+                        ? "bg-white/15 text-[#F4A261]"
+                        : "text-[#F6E7D8]/70 hover:bg-white/10 hover:text-white"
+                    }`}
+                  >
+                    {section.label}
+                  </button>
+                ))}
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+      </nav>
 
       {/* =====================================================
           TIME RAIL
       ===================================================== */}
 
-      <div className="fixed left-6 lg:left-10 top-1/2 -translate-y-1/2 z-50 hidden lg:flex flex-col gap-7">
+      <div className="fixed left-6 lg:left-10 top-1/2 -translate-y-1/2 z-[100] hidden lg:flex flex-col gap-7">
 
         {sections.map((section) => (
           <button
@@ -423,7 +451,6 @@ export default function Home() {
             className="flex items-center gap-3 group text-left"
             aria-label={`Go to ${section.label}`}
           >
-
             <div
               className={`h-2.5 w-2.5 rounded-full transition-all duration-500 ${
                 active === section.id
@@ -441,7 +468,6 @@ export default function Home() {
             >
               {section.time}
             </span>
-
           </button>
         ))}
 
@@ -461,65 +487,24 @@ export default function Home() {
 
         {/* HERO IMAGE */}
 
-        <Image
-          src="/images/cafe-lights.jpg"
-          alt="Warm lights at Magic Land Cafe"
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover object-center"
-        />
+        <div className="absolute inset-0 z-0">
+          <Image
+            src="/images/cafe-lights.jpg"
+            alt="Warm lights at Magic Land Cafe"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-center"
+          />
+        </div>
 
         {/* HERO OVERLAYS */}
 
-        <div className="absolute inset-0 bg-gradient-to-b from-[#071A2B]/60 via-transparent to-[#071A2B]/70" />
+        <div className="absolute inset-0 z-[1] bg-gradient-to-b from-[#071A2B]/60 via-transparent to-[#071A2B]/70 pointer-events-none" />
 
-        <div className="absolute inset-0 bg-gradient-to-r from-[#071A2B]/90 via-[#071A2B]/40 to-transparent" />
+        <div className="absolute inset-0 z-[1] bg-gradient-to-r from-[#071A2B]/90 via-[#071A2B]/40 to-transparent pointer-events-none" />
 
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_68%_45%,transparent_0%,transparent_42%,rgba(7,26,43,0.10)_70%,rgba(7,26,43,0.30)_100%)]" />
-
-        {/* =================================================
-            NAVBAR
-        ================================================= */}
-
-        <nav className="absolute top-0 left-0 right-0 z-40 px-5 sm:px-8 lg:px-12 pt-5">
-
-          <div className="mx-auto max-w-7xl rounded-full border border-white/15 bg-[#071A2B]/15 px-4 sm:px-6 py-3 backdrop-blur-md">
-
-            <div className="flex items-center justify-between gap-4">
-
-              <button
-                type="button"
-                onClick={() => scrollToSection("hero")}
-                className="shrink-0 font-serif italic text-lg sm:text-xl text-[#F6E7D8]/90 transition-opacity hover:opacity-70"
-              >
-                Magic Land
-              </button>
-
-              <div className="flex items-center gap-1 sm:gap-2 overflow-x-auto scrollbar-hide">
-
-                {sections.map((section) => (
-                  <button
-                    key={section.id}
-                    type="button"
-                    onClick={() => scrollToSection(section.id)}
-                    className={`shrink-0 rounded-full px-3 sm:px-4 py-2 font-mono text-[9px] sm:text-[10px] tracking-[0.12em] uppercase transition-all duration-300 ${
-                      active === section.id
-                        ? "bg-white/15 text-[#F4A261]"
-                        : "text-[#F6E7D8]/65 hover:bg-white/10 hover:text-white"
-                    }`}
-                  >
-                    {section.label}
-                  </button>
-                ))}
-
-              </div>
-
-            </div>
-
-          </div>
-
-        </nav>
+        <div className="absolute inset-0 z-[1] bg-[radial-gradient(circle_at_68%_45%,transparent_0%,transparent_42%,rgba(7,26,43,0.10)_70%,rgba(7,26,43,0.30)_100%)] pointer-events-none" />
 
         {/* =================================================
             HERO CONTENT
@@ -565,13 +550,11 @@ export default function Home() {
                   onClick={() => scrollToSection("morning")}
                   className="group flex items-center gap-4 rounded-full border border-[#F6E7D8]/25 bg-[#071A2B]/35 backdrop-blur-md px-6 py-3 text-sm text-[#F6E7D8] transition-all duration-500 hover:bg-[#F4A261] hover:text-[#071A2B]"
                 >
-
                   Explore the day
 
                   <span className="transition-transform duration-300 group-hover:translate-y-1">
                     ↓
                   </span>
-
                 </button>
 
                 <span className="font-mono text-[9px] tracking-[0.2em] uppercase text-[#F6E7D8]/45">
@@ -588,11 +571,11 @@ export default function Home() {
 
         {/* BOTTOM FADE */}
 
-        <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-[#071A2B] to-transparent pointer-events-none" />
+        <div className="absolute bottom-0 left-0 right-0 z-[2] h-40 bg-gradient-to-t from-[#071A2B] to-transparent pointer-events-none" />
 
         {/* SCROLL INDICATOR */}
 
-        <div className="absolute bottom-8 right-8 sm:right-16 flex flex-col items-center gap-2 text-[#F6E7D8]/50">
+        <div className="absolute bottom-8 right-8 sm:right-16 z-10 flex flex-col items-center gap-2 text-[#F6E7D8]/50">
 
           <span className="font-mono text-[9px] tracking-[0.2em] uppercase [writing-mode:vertical-rl]">
             Scroll
@@ -639,8 +622,6 @@ export default function Home() {
 
           </div>
 
-          {/* MORNING GALLERY */}
-
           <div className="max-w-5xl">
 
             <p className="mb-4 font-mono text-[9px] tracking-[0.2em] uppercase text-[#071A2B]/35">
@@ -674,8 +655,6 @@ export default function Home() {
             />
 
           </div>
-
-          {/* MORNING INFO */}
 
           <div className="grid sm:grid-cols-2 gap-4 mt-6 max-w-2xl">
 
@@ -730,14 +709,11 @@ export default function Home() {
             </span>
 
             <h2 className="font-serif text-5xl sm:text-6xl lg:text-8xl leading-[0.88] mt-5">
-
               When the sky
               <br />
-
               <span className="italic text-[#FFE8A3]">
                 turns gold.
               </span>
-
             </h2>
 
             <p className="mt-8 max-w-xl text-[#071A2B]/70 leading-relaxed">
@@ -746,8 +722,6 @@ export default function Home() {
             </p>
 
           </div>
-
-          {/* SUNSET GALLERY */}
 
           <div className="max-w-5xl">
 
@@ -807,8 +781,6 @@ export default function Home() {
 
         <div className="relative z-10 max-w-6xl mx-auto">
 
-          {/* MENU HEADER */}
-
           <div className="grid lg:grid-cols-2 gap-12 items-end">
 
             <div>
@@ -818,14 +790,11 @@ export default function Home() {
               </span>
 
               <h2 className="font-serif text-6xl sm:text-7xl lg:text-8xl leading-[0.85] mt-5">
-
                 Come hungry.
                 <br />
-
                 <span className="italic text-[#E76F51]">
                   Stay awhile.
                 </span>
-
               </h2>
 
             </div>
@@ -841,8 +810,6 @@ export default function Home() {
           {/* FEATURE FOOD */}
 
           <div className="grid md:grid-cols-3 gap-5 mt-16">
-
-            {/* BURGER */}
 
             <div className="group relative h-[360px] rounded-[2rem] overflow-hidden">
 
@@ -874,8 +841,6 @@ export default function Home() {
 
             </div>
 
-            {/* FRIES */}
-
             <div className="group relative h-[360px] rounded-[2rem] overflow-hidden">
 
               <Image
@@ -905,8 +870,6 @@ export default function Home() {
               </div>
 
             </div>
-
-            {/* MILK TEA */}
 
             <div className="group relative h-[360px] rounded-[2rem] overflow-hidden">
 
@@ -1028,14 +991,11 @@ export default function Home() {
               </span>
 
               <h3 className="font-serif text-5xl sm:text-6xl leading-[0.9] mt-5">
-
                 Made with
                 <br />
-
                 <span className="italic text-[#E76F51]">
                   intention.
                 </span>
-
               </h3>
 
               <p className="mt-7 text-[#071A2B]/60 max-w-md leading-relaxed">
@@ -1048,20 +1008,16 @@ export default function Home() {
                 onClick={() => scrollToSection("night")}
                 className="mt-8 group flex items-center gap-3 rounded-full bg-[#071A2B] text-[#F6E7D8] px-6 py-3 font-mono text-[10px] tracking-[0.15em] uppercase transition-all duration-300 hover:bg-[#F4A261] hover:text-[#071A2B]"
               >
-
                 Continue into the night
 
                 <span className="transition-transform duration-300 group-hover:translate-x-1">
                   →
                 </span>
-
               </button>
 
             </div>
 
           </div>
-
-          {/* MENU NOTE */}
 
           <div className="mt-20 border-t border-[#071A2B]/10 pt-8">
 
@@ -1094,22 +1050,17 @@ export default function Home() {
           </span>
 
           <h2 className="font-serif italic text-5xl sm:text-6xl lg:text-8xl leading-[0.9] mt-5 max-w-4xl">
-
             The night stays
             <br />
-
             <span className="text-[#F4A261]">
               lit.
             </span>
-
           </h2>
 
           <p className="mt-8 text-[#F6E7D8]/55 max-w-lg leading-relaxed">
             When the sun disappears, the café changes character. Warm lights,
             late conversations, good food, and nowhere else you need to be.
           </p>
-
-          {/* NIGHT GALLERY */}
 
           <div className="mt-16 max-w-5xl">
 
@@ -1141,8 +1092,6 @@ export default function Home() {
             />
 
           </div>
-
-          {/* CLOSING */}
 
           <div className="mt-20 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-8 border-t border-white/10 pt-10">
 
