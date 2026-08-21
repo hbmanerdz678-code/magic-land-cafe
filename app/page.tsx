@@ -3,6 +3,10 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
+/* =========================================================
+   TIMELINE
+========================================================= */
+
 const sections = [
   { id: "hero", time: "07:30", label: "First Light" },
   { id: "morning", time: "09:15", label: "Ocean Morning" },
@@ -11,24 +15,28 @@ const sections = [
   { id: "night", time: "21:00", label: "After Dark" },
 ];
 
+/* =========================================================
+   MENU
+========================================================= */
+
 const menuCategories = [
   {
     name: "Coffee",
-    subtitle: "Slowly brewed. Always warm.",
+    subtitle: "The classics",
     items: [
       {
         name: "Espresso",
-        description: "Rich, bold, and beautifully simple.",
+        description: "Rich, bold, and simple.",
         price: "₱120",
       },
       {
         name: "Americano",
-        description: "Espresso with hot water and a clean finish.",
+        description: "Espresso with hot water.",
         price: "₱140",
       },
       {
         name: "Café Latte",
-        description: "Smooth espresso with silky steamed milk.",
+        description: "Smooth espresso with steamed milk.",
         price: "₱160",
       },
       {
@@ -40,62 +48,328 @@ const menuCategories = [
   },
   {
     name: "Signature",
-    subtitle: "A little more interesting.",
+    subtitle: "Made our way",
     items: [
       {
         name: "Spanish Latte",
-        description: "Espresso, creamy milk, and a touch of sweetness.",
+        description: "Sweet, creamy, and comforting.",
         price: "₱180",
       },
       {
         name: "Sea Salt Latte",
-        description: "Velvety coffee with a delicate salted cream.",
+        description: "Creamy coffee with a gentle salty finish.",
         price: "₱190",
       },
       {
         name: "Honey Cinnamon",
-        description: "Warm espresso, honey, milk, and cinnamon.",
+        description: "Warm honey and cinnamon over espresso.",
         price: "₱185",
       },
       {
         name: "Iced Mocha",
-        description: "Cold espresso, chocolate, and creamy milk.",
+        description: "Chocolate, espresso, and chilled milk.",
         price: "₱180",
       },
     ],
   },
   {
     name: "Bites",
-    subtitle: "Something for the table.",
+    subtitle: "Something to share",
     items: [
       {
         name: "Butter Croissant",
-        description: "Golden, flaky, and baked fresh.",
+        description: "Flaky, buttery, and freshly baked.",
         price: "₱135",
       },
       {
         name: "Chocolate Croissant",
-        description: "Buttery pastry filled with dark chocolate.",
+        description: "Golden pastry with chocolate inside.",
         price: "₱155",
       },
       {
         name: "Café Burger",
-        description: "A hearty house burger made for slow evenings.",
+        description: "A hearty burger made for slow evenings.",
         price: "₱250",
       },
       {
         name: "Crispy Fries",
-        description: "Golden, crunchy, and perfect for sharing.",
+        description: "Golden, crisp, and perfect for sharing.",
         price: "₱150",
       },
     ],
   },
 ];
 
+/* =========================================================
+   CAROUSEL TYPES
+========================================================= */
+
+type CarouselImage = {
+  src: string;
+  alt: string;
+  label: string;
+};
+
+/* =========================================================
+   PREMIUM IMAGE CAROUSEL
+========================================================= */
+
+function ImageCarousel({
+  images,
+  height,
+  dark = false,
+}: {
+  images: CarouselImage[];
+  height: string;
+  dark?: boolean;
+}) {
+  const [current, setCurrent] = useState(0);
+  const touchStart = useRef<number | null>(null);
+
+  const next = () => {
+    setCurrent((previous) => (previous + 1) % images.length);
+  };
+
+  const previous = () => {
+    setCurrent(
+      (previous) => (previous - 1 + images.length) % images.length
+    );
+  };
+
+  const handleTouchStart = (
+    event: React.TouchEvent<HTMLDivElement>
+  ) => {
+    touchStart.current = event.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (
+    event: React.TouchEvent<HTMLDivElement>
+  ) => {
+    if (touchStart.current === null) return;
+
+    const touchEnd = event.changedTouches[0].clientX;
+    const distance = touchStart.current - touchEnd;
+
+    if (Math.abs(distance) > 50) {
+      if (distance > 0) {
+        next();
+      } else {
+        previous();
+      }
+    }
+
+    touchStart.current = null;
+  };
+
+  const activeImage = images[current];
+
+  return (
+    <div
+      className={`relative ${height} w-full overflow-hidden rounded-[2rem] ${
+        dark ? "bg-[#050F1A]" : "bg-[#DED4C7]"
+      } touch-pan-y`}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+    >
+
+      {/* =====================================================
+          AMBIENT BACKGROUND
+
+          This fills the side spaces with a soft version
+          of the CURRENT photograph.
+
+          It does NOT change the actual image.
+      ===================================================== */}
+
+      {images.map((image, index) => (
+        <div
+          key={`background-${image.src}`}
+          className={`absolute inset-0 transition-opacity duration-700 ${
+            index === current
+              ? "opacity-100"
+              : "opacity-0"
+          }`}
+          aria-hidden="true"
+        >
+          <Image
+            src={image.src}
+            alt=""
+            fill
+            sizes="100vw"
+            className="object-cover object-center scale-110 blur-2xl"
+          />
+
+          <div
+            className={`absolute inset-0 ${
+              dark
+                ? "bg-[#071A2B]/65"
+                : "bg-[#F6E7D8]/55"
+            }`}
+          />
+        </div>
+      ))}
+
+      {/* =====================================================
+          AMBIENT LIGHT
+
+          Gives the gallery a softer cinematic appearance.
+      ===================================================== */}
+
+      <div
+        className={`absolute inset-0 ${
+          dark
+            ? "bg-[radial-gradient(circle_at_center,transparent_15%,rgba(7,26,43,0.35)_75%,rgba(7,26,43,0.75)_100%)]"
+            : "bg-[radial-gradient(circle_at_center,transparent_15%,rgba(246,231,216,0.25)_70%,rgba(246,231,216,0.65)_100%)]"
+        }`}
+      />
+
+      {/* =====================================================
+          ORIGINAL IMAGE
+
+          IMPORTANT:
+
+          object-contain means the ENTIRE image is preserved.
+
+          There is:
+          - NO object-cover
+          - NO scale animation
+          - NO zoom
+          - NO cropping
+      ===================================================== */}
+
+      {images.map((image, index) => (
+        <div
+          key={`main-${image.src}`}
+          className={`absolute inset-0 flex items-center justify-center p-3 sm:p-5 lg:p-7 transition-opacity duration-700 ease-in-out ${
+            index === current
+              ? "opacity-100"
+              : "opacity-0"
+          }`}
+          aria-hidden={index !== current}
+        >
+          <div className="relative h-full w-full">
+            <Image
+              src={image.src}
+              alt={image.alt}
+              fill
+              sizes="(max-width: 768px) 100vw, 80vw"
+              className="object-contain object-center"
+              priority={index === 0}
+            />
+          </div>
+        </div>
+      ))}
+
+      {/* =====================================================
+          SOFT IMAGE EDGE
+      ===================================================== */}
+
+      <div className="absolute inset-3 sm:inset-5 lg:inset-7 rounded-[1.25rem] border border-white/10 pointer-events-none" />
+
+      {/* =====================================================
+          TOP LEFT PHOTO NUMBER
+      ===================================================== */}
+
+      <div className="absolute left-5 top-5 sm:left-7 sm:top-7 z-20">
+
+        <div className="flex items-center gap-3">
+
+          <span className="font-mono text-[9px] tracking-[0.2em] text-white/65">
+            {String(current + 1).padStart(2, "0")}
+          </span>
+
+          <div className="h-px w-8 bg-white/25" />
+
+          <span className="font-mono text-[9px] tracking-[0.2em] text-white/35">
+            {String(images.length).padStart(2, "0")}
+          </span>
+
+        </div>
+
+      </div>
+
+      {/* =====================================================
+          LABEL
+      ===================================================== */}
+
+      <div className="absolute left-5 bottom-5 sm:left-7 sm:bottom-7 z-20">
+
+        <div className="flex items-center gap-3">
+
+          <div className="h-px w-6 bg-[#F4A261]" />
+
+          <span className="font-mono text-[9px] sm:text-[10px] tracking-[0.22em] uppercase text-white/80 drop-shadow-lg">
+            {activeImage.label}
+          </span>
+
+        </div>
+
+      </div>
+
+      {/* =====================================================
+          ARROWS
+      ===================================================== */}
+
+      <div className="absolute right-5 bottom-5 sm:right-7 sm:bottom-7 z-20 flex items-center gap-2">
+
+        <button
+          type="button"
+          onClick={previous}
+          aria-label="Previous image"
+          className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-black/20 text-white backdrop-blur-xl transition-all duration-300 hover:bg-white hover:text-[#071A2B]"
+        >
+          ←
+        </button>
+
+        <button
+          type="button"
+          onClick={next}
+          aria-label="Next image"
+          className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-black/20 text-white backdrop-blur-xl transition-all duration-300 hover:bg-white hover:text-[#071A2B]"
+        >
+          →
+        </button>
+
+      </div>
+
+      {/* =====================================================
+          DOTS
+      ===================================================== */}
+
+      <div className="absolute bottom-6 left-1/2 z-20 -translate-x-1/2 flex items-center gap-1.5">
+
+        {images.map((image, index) => (
+          <button
+            key={`dot-${image.src}`}
+            type="button"
+            onClick={() => setCurrent(index)}
+            aria-label={`Show image ${index + 1}`}
+            className={`h-1.5 rounded-full transition-all duration-500 ${
+              index === current
+                ? "w-7 bg-white"
+                : "w-1.5 bg-white/40 hover:bg-white/70"
+            }`}
+          />
+        ))}
+
+      </div>
+
+    </div>
+  );
+}
+
+/* =========================================================
+   HOME
+========================================================= */
+
 export default function Home() {
   const [active, setActive] = useState("hero");
 
   const refs = useRef<Record<string, HTMLElement | null>>({});
+
+  /* =======================================================
+     SECTION OBSERVER
+  ======================================================= */
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -112,11 +386,19 @@ export default function Home() {
     );
 
     Object.values(refs.current).forEach((element) => {
-      if (element) observer.observe(element);
+      if (element) {
+        observer.observe(element);
+      }
     });
 
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+    };
   }, []);
+
+  /* =======================================================
+     SCROLL
+  ======================================================= */
 
   const scrollToSection = (id: string) => {
     document.getElementById(id)?.scrollIntoView({
@@ -132,13 +414,16 @@ export default function Home() {
       ===================================================== */}
 
       <div className="fixed left-6 lg:left-10 top-1/2 -translate-y-1/2 z-50 hidden lg:flex flex-col gap-7">
+
         {sections.map((section) => (
           <button
             key={section.id}
+            type="button"
             onClick={() => scrollToSection(section.id)}
             className="flex items-center gap-3 group text-left"
             aria-label={`Go to ${section.label}`}
           >
+
             <div
               className={`h-2.5 w-2.5 rounded-full transition-all duration-500 ${
                 active === section.id
@@ -156,12 +441,14 @@ export default function Home() {
             >
               {section.time}
             </span>
+
           </button>
         ))}
+
       </div>
 
       {/* =====================================================
-          HERO — FIRST LIGHT
+          HERO
       ===================================================== */}
 
       <section
@@ -172,69 +459,126 @@ export default function Home() {
         className="relative min-h-screen w-full overflow-hidden"
       >
 
-        {/* Main café photograph */}
+        {/* HERO IMAGE */}
 
         <Image
           src="/images/cafe-lights.jpg"
-          alt="Warm cafe lights"
+          alt="Warm lights at Magic Land Cafe"
           fill
           priority
           sizes="100vw"
           className="object-cover object-center"
         />
 
-        {/* Gentle darkening for readability */}
+        {/* HERO OVERLAYS */}
 
-        <div className="absolute inset-0 bg-gradient-to-b from-[#071A2B]/70 via-[#071A2B]/10 to-[#071A2B]/60" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#071A2B]/60 via-transparent to-[#071A2B]/70" />
 
-        <div className="absolute inset-0 bg-gradient-to-r from-[#071A2B]/65 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#071A2B]/90 via-[#071A2B]/40 to-transparent" />
 
-        {/* HERO CONTENT
-            Positioned higher so the café lights remain visible. */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_68%_45%,transparent_0%,transparent_42%,rgba(7,26,43,0.10)_70%,rgba(7,26,43,0.30)_100%)]" />
 
-        <div className="relative z-10 min-h-screen flex items-start">
+        {/* =================================================
+            NAVBAR
+        ================================================= */}
 
-          <div className="px-8 sm:px-16 lg:px-24 pt-[14vh] sm:pt-[16vh] lg:pt-[18vh] max-w-5xl">
+        <nav className="absolute top-0 left-0 right-0 z-40 px-5 sm:px-8 lg:px-12 pt-5">
 
-            <div className="flex items-center gap-4 mb-6">
+          <div className="mx-auto max-w-7xl rounded-full border border-white/15 bg-[#071A2B]/15 px-4 sm:px-6 py-3 backdrop-blur-md">
 
-              <div className="h-px w-12 bg-[#F4A261]" />
+            <div className="flex items-center justify-between gap-4">
 
-              <span className="font-mono text-[#F4A261] text-[11px] tracking-[0.3em] uppercase">
-                07:30 — First Light
-              </span>
+              <button
+                type="button"
+                onClick={() => scrollToSection("hero")}
+                className="shrink-0 font-serif italic text-lg sm:text-xl text-[#F6E7D8]/90 transition-opacity hover:opacity-70"
+              >
+                Magic Land
+              </button>
+
+              <div className="flex items-center gap-1 sm:gap-2 overflow-x-auto scrollbar-hide">
+
+                {sections.map((section) => (
+                  <button
+                    key={section.id}
+                    type="button"
+                    onClick={() => scrollToSection(section.id)}
+                    className={`shrink-0 rounded-full px-3 sm:px-4 py-2 font-mono text-[9px] sm:text-[10px] tracking-[0.12em] uppercase transition-all duration-300 ${
+                      active === section.id
+                        ? "bg-white/15 text-[#F4A261]"
+                        : "text-[#F6E7D8]/65 hover:bg-white/10 hover:text-white"
+                    }`}
+                  >
+                    {section.label}
+                  </button>
+                ))}
+
+              </div>
 
             </div>
 
-            <h1 className="font-serif italic text-6xl sm:text-7xl lg:text-8xl xl:text-9xl leading-[0.86] tracking-tight text-[#F6E7D8] max-w-4xl">
-              Where the
-              <br />
-              <span className="text-[#F4A261]">
-                day begins.
-              </span>
-            </h1>
+          </div>
 
-            <p className="mt-8 text-base sm:text-lg text-[#F6E7D8]/75 max-w-xl leading-relaxed">
-              Coffee, ocean air, mountain light, and a place to slow down.
-              Follow the café from first light to the last glow of the evening.
-            </p>
+        </nav>
 
-            <div className="mt-9 flex items-center gap-6">
+        {/* =================================================
+            HERO CONTENT
+        ================================================= */}
 
-              <button
-                onClick={() => scrollToSection("morning")}
-                className="group flex items-center gap-4 rounded-full border border-[#F6E7D8]/25 bg-[#071A2B]/20 backdrop-blur-md px-6 py-3 text-sm transition-all duration-500 hover:bg-[#F4A261] hover:text-[#071A2B]"
-              >
-                Explore the day
+        <div className="relative z-10 min-h-screen flex items-start">
 
-                <span className="transition-transform duration-300 group-hover:translate-y-1">
-                  ↓
+          <div className="w-full px-6 sm:px-10 lg:px-16 xl:px-20 pt-[30vh] sm:pt-[27vh] lg:pt-[25vh]">
+
+            <div className="max-w-[430px] sm:max-w-[480px] lg:max-w-[510px]">
+
+              <div className="flex items-center gap-4 mb-5">
+
+                <div className="h-px w-9 sm:w-12 bg-[#F4A261]" />
+
+                <span className="font-mono text-[#F4A261] text-[9px] sm:text-[10px] tracking-[0.28em] uppercase">
+                  07:30 — First Light
                 </span>
-              </button>
 
-              <span className="hidden sm:block font-mono text-[10px] tracking-[0.2em] uppercase text-[#F6E7D8]/50">
-                Cebu · Philippines
-              </span>
+              </div>
+
+              <h1 className="font-serif italic font-light text-5xl sm:text-6xl lg:text-7xl xl:text-[5.5rem] leading-[0.88] tracking-tight text-[#F6E7D8]/95 drop-shadow-[0_3px_18px_rgba(0,0,0,0.5)]">
+
+                Where the
+
+                <br />
+
+                <span className="font-light text-[#F4A261]">
+                  day begins.
+                </span>
+
+              </h1>
+
+              <p className="mt-6 text-sm sm:text-base lg:text-lg font-light text-[#F6E7D8]/70 max-w-[430px] leading-relaxed drop-shadow-[0_2px_10px_rgba(0,0,0,0.45)]">
+                Coffee, ocean air, mountain light, and a place to slow down.
+                Follow the café from first light to the last glow of the evening.
+              </p>
+
+              <div className="mt-7 flex flex-wrap items-center gap-4">
+
+                <button
+                  type="button"
+                  onClick={() => scrollToSection("morning")}
+                  className="group flex items-center gap-4 rounded-full border border-[#F6E7D8]/25 bg-[#071A2B]/35 backdrop-blur-md px-6 py-3 text-sm text-[#F6E7D8] transition-all duration-500 hover:bg-[#F4A261] hover:text-[#071A2B]"
+                >
+
+                  Explore the day
+
+                  <span className="transition-transform duration-300 group-hover:translate-y-1">
+                    ↓
+                  </span>
+
+                </button>
+
+                <span className="font-mono text-[9px] tracking-[0.2em] uppercase text-[#F6E7D8]/45">
+                  Cebu · Philippines
+                </span>
+
+              </div>
 
             </div>
 
@@ -242,11 +586,11 @@ export default function Home() {
 
         </div>
 
-        {/* Bottom fade */}
+        {/* BOTTOM FADE */}
 
         <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-[#071A2B] to-transparent pointer-events-none" />
 
-        {/* Scroll indicator */}
+        {/* SCROLL INDICATOR */}
 
         <div className="absolute bottom-8 right-8 sm:right-16 flex flex-col items-center gap-2 text-[#F6E7D8]/50">
 
@@ -261,7 +605,7 @@ export default function Home() {
       </section>
 
       {/* =====================================================
-          MORNING — OCEAN MORNING
+          MORNING
       ===================================================== */}
 
       <section
@@ -295,47 +639,43 @@ export default function Home() {
 
           </div>
 
-          {/* MORNING PHOTO GRID */}
+          {/* MORNING GALLERY */}
 
-          <div className="grid lg:grid-cols-5 gap-5">
+          <div className="max-w-5xl">
 
-            <div className="relative h-[520px] lg:col-span-3 rounded-[2rem] overflow-hidden group">
+            <p className="mb-4 font-mono text-[9px] tracking-[0.2em] uppercase text-[#071A2B]/35">
+              Stories from the café · swipe or use the arrows
+            </p>
 
-              <Image
-                src="/images/cafe6.jpg"
-                alt="Ocean morning cafe"
-                fill
-                sizes="(max-width: 1024px) 100vw, 60vw"
-                className="object-cover transition-transform duration-1000 group-hover:scale-105"
-              />
-
-              <div className="absolute inset-0 bg-gradient-to-t from-[#071A2B]/60 via-transparent to-transparent" />
-
-              <span className="absolute left-6 bottom-6 font-mono text-[9px] tracking-[0.2em] uppercase text-white/80">
-                Ocean morning
-              </span>
-
-            </div>
-
-            <div className="relative h-[520px] lg:col-span-2 rounded-[2rem] overflow-hidden group">
-
-              <Image
-                src="/images/pathway-noon.jpg"
-                alt="Bright pathway at noon"
-                fill
-                sizes="(max-width: 1024px) 100vw, 40vw"
-                className="object-cover transition-transform duration-1000 group-hover:scale-105"
-              />
-
-              <div className="absolute inset-0 bg-gradient-to-t from-[#071A2B]/60 via-transparent to-transparent" />
-
-              <span className="absolute left-6 bottom-6 font-mono text-[9px] tracking-[0.2em] uppercase text-white/80">
-                Noon light
-              </span>
-
-            </div>
+            <ImageCarousel
+              height="h-[380px] sm:h-[480px] lg:h-[520px]"
+              images={[
+                {
+                  src: "/images/cafe6.jpg",
+                  alt: "Morning at the cafe",
+                  label: "Ocean morning",
+                },
+                {
+                  src: "/images/pathway-noon.jpg",
+                  alt: "Pathway during the day",
+                  label: "The path at noon",
+                },
+                {
+                  src: "/images/cafe7.jpg",
+                  alt: "Mountain view from the cafe",
+                  label: "Mountain morning",
+                },
+                {
+                  src: "/images/cafe-lights.jpg",
+                  alt: "Cafe atmosphere",
+                  label: "A quiet beginning",
+                },
+              ]}
+            />
 
           </div>
+
+          {/* MORNING INFO */}
 
           <div className="grid sm:grid-cols-2 gap-4 mt-6 max-w-2xl">
 
@@ -390,11 +730,14 @@ export default function Home() {
             </span>
 
             <h2 className="font-serif text-5xl sm:text-6xl lg:text-8xl leading-[0.88] mt-5">
+
               When the sky
               <br />
+
               <span className="italic text-[#FFE8A3]">
                 turns gold.
               </span>
+
             </h2>
 
             <p className="mt-8 max-w-xl text-[#071A2B]/70 leading-relaxed">
@@ -404,133 +747,45 @@ export default function Home() {
 
           </div>
 
-          {/* MAIN SUNSET */}
-
-          <div className="relative h-[55vh] min-h-[420px] max-h-[700px] rounded-[2rem] overflow-hidden group">
-
-            <Image
-              src="/images/pathway-sunset.jpg"
-              alt="Pathway during sunset"
-              fill
-              sizes="100vw"
-              className="object-cover transition-transform duration-[1200ms] group-hover:scale-105"
-            />
-
-            <div className="absolute inset-0 bg-gradient-to-t from-[#071A2B]/70 via-transparent to-transparent" />
-
-            <div className="absolute bottom-7 left-7">
-
-              <span className="font-mono text-[9px] tracking-[0.2em] uppercase text-white/70">
-                The golden path
-              </span>
-
-              <h3 className="font-serif italic text-3xl sm:text-4xl text-white mt-2">
-                The last warm light.
-              </h3>
-
-            </div>
-
-          </div>
-
           {/* SUNSET GALLERY */}
 
-          <div className="grid md:grid-cols-3 gap-5 mt-5">
+          <div className="max-w-5xl">
 
-            <div className="relative h-[380px] rounded-[2rem] overflow-hidden group">
-
-              <Image
-                src="/images/sunset3.jpg"
-                alt="Early sunset"
-                fill
-                sizes="(max-width: 768px) 100vw, 33vw"
-                className="object-cover transition-transform duration-1000 group-hover:scale-105"
-              />
-
-              <div className="absolute inset-0 bg-gradient-to-t from-[#071A2B]/60 via-transparent to-transparent" />
-
-              <span className="absolute left-6 bottom-6 font-mono text-[9px] tracking-[0.2em] uppercase text-white/80">
-                Early sunset
-              </span>
-
-            </div>
-
-            <div className="relative h-[380px] rounded-[2rem] overflow-hidden group">
-
-              <Image
-                src="/images/sunset5.jpg"
-                alt="Sunset with clouds"
-                fill
-                sizes="(max-width: 768px) 100vw, 33vw"
-                className="object-cover transition-transform duration-1000 group-hover:scale-105"
-              />
-
-              <div className="absolute inset-0 bg-gradient-to-t from-[#071A2B]/60 via-transparent to-transparent" />
-
-              <span className="absolute left-6 bottom-6 font-mono text-[9px] tracking-[0.2em] uppercase text-white/80">
-                Between the clouds
-              </span>
-
-            </div>
-
-            <div className="relative h-[380px] rounded-[2rem] overflow-hidden group">
-
-              <Image
-                src="/images/sunset4.jpg"
-                alt="Balcony overlooking sunset"
-                fill
-                sizes="(max-width: 768px) 100vw, 33vw"
-                className="object-cover transition-transform duration-1000 group-hover:scale-105"
-              />
-
-              <div className="absolute inset-0 bg-gradient-to-t from-[#071A2B]/70 via-transparent to-transparent" />
-
-              <span className="absolute left-6 bottom-6 font-mono text-[9px] tracking-[0.2em] uppercase text-white/80">
-                From the balcony
-              </span>
-
-            </div>
-
-          </div>
-
-          {/* DUSK */}
-
-          <div className="grid md:grid-cols-2 gap-5 mt-5">
-
-            <div className="relative h-[330px] rounded-[2rem] overflow-hidden group">
-
-              <Image
-                src="/images/sunset2.jpg"
-                alt="Light sunset"
-                fill
-                sizes="(max-width: 768px) 100vw, 50vw"
-                className="object-cover transition-transform duration-1000 group-hover:scale-105"
-              />
-
-              <div className="absolute inset-0 bg-gradient-to-t from-[#071A2B]/60 via-transparent to-transparent" />
-
-              <span className="absolute left-6 bottom-6 font-mono text-[9px] tracking-[0.2em] uppercase text-white/80">
-                Dusk begins
-              </span>
-
-            </div>
-
-            <div className="relative h-[330px] rounded-[2rem] overflow-hidden group">
-
-              <Image
-                src="/images/sunset1.jpg"
-                alt="Almost dark sunset"
-                fill
-                sizes="(max-width: 768px) 100vw, 50vw"
-                className="object-cover transition-transform duration-1000 group-hover:scale-105"
-              />
-
-              <div className="absolute inset-0 bg-gradient-to-t from-[#071A2B]/70 via-transparent to-transparent" />
-
-              <span className="absolute left-6 bottom-6 font-mono text-[9px] tracking-[0.2em] uppercase text-white/80">
-                Almost night
-              </span>
-
-            </div>
+            <ImageCarousel
+              height="h-[400px] sm:h-[500px] lg:h-[540px]"
+              images={[
+                {
+                  src: "/images/pathway-sunset.jpg",
+                  alt: "Pathway during sunset",
+                  label: "The golden path",
+                },
+                {
+                  src: "/images/sunset3.jpg",
+                  alt: "Early sunset",
+                  label: "Early sunset",
+                },
+                {
+                  src: "/images/sunset5.jpg",
+                  alt: "Sunset with clouds",
+                  label: "Between the clouds",
+                },
+                {
+                  src: "/images/sunset4.jpg",
+                  alt: "Balcony overlooking sunset",
+                  label: "From the balcony",
+                },
+                {
+                  src: "/images/sunset2.jpg",
+                  alt: "Light sunset",
+                  label: "Dusk begins",
+                },
+                {
+                  src: "/images/sunset1.jpg",
+                  alt: "Almost dark sunset",
+                  label: "Almost night",
+                },
+              ]}
+            />
 
           </div>
 
@@ -552,6 +807,8 @@ export default function Home() {
 
         <div className="relative z-10 max-w-6xl mx-auto">
 
+          {/* MENU HEADER */}
+
           <div className="grid lg:grid-cols-2 gap-12 items-end">
 
             <div>
@@ -561,11 +818,14 @@ export default function Home() {
               </span>
 
               <h2 className="font-serif text-6xl sm:text-7xl lg:text-8xl leading-[0.85] mt-5">
+
                 Come hungry.
                 <br />
+
                 <span className="italic text-[#E76F51]">
                   Stay awhile.
                 </span>
+
               </h2>
 
             </div>
@@ -581,6 +841,8 @@ export default function Home() {
           {/* FEATURE FOOD */}
 
           <div className="grid md:grid-cols-3 gap-5 mt-16">
+
+            {/* BURGER */}
 
             <div className="group relative h-[360px] rounded-[2rem] overflow-hidden">
 
@@ -612,10 +874,12 @@ export default function Home() {
 
             </div>
 
+            {/* FRIES */}
+
             <div className="group relative h-[360px] rounded-[2rem] overflow-hidden">
 
               <Image
-                src="/images/cafe 8.jpg"
+                src="/images/cafe8.jpg"
                 alt="Crispy fries"
                 fill
                 sizes="(max-width: 768px) 100vw, 33vw"
@@ -642,10 +906,12 @@ export default function Home() {
 
             </div>
 
+            {/* MILK TEA */}
+
             <div className="group relative h-[360px] rounded-[2rem] overflow-hidden">
 
               <Image
-                src="/images/cafe 9.jpg"
+                src="/images/cafe9.jpg"
                 alt="Signature milk tea"
                 fill
                 sizes="(max-width: 768px) 100vw, 33vw"
@@ -746,7 +1012,7 @@ export default function Home() {
             <div className="relative h-[350px] sm:h-[430px] rounded-[2rem] overflow-hidden">
 
               <Image
-                src="/images/cafe 12.jpg"
+                src="/images/cafe12.jpg"
                 alt="Cafe counter"
                 fill
                 sizes="(max-width: 1024px) 100vw, 50vw"
@@ -762,11 +1028,14 @@ export default function Home() {
               </span>
 
               <h3 className="font-serif text-5xl sm:text-6xl leading-[0.9] mt-5">
+
                 Made with
                 <br />
+
                 <span className="italic text-[#E76F51]">
                   intention.
                 </span>
+
               </h3>
 
               <p className="mt-7 text-[#071A2B]/60 max-w-md leading-relaxed">
@@ -775,9 +1044,11 @@ export default function Home() {
               </p>
 
               <button
+                type="button"
                 onClick={() => scrollToSection("night")}
                 className="mt-8 group flex items-center gap-3 rounded-full bg-[#071A2B] text-[#F6E7D8] px-6 py-3 font-mono text-[10px] tracking-[0.15em] uppercase transition-all duration-300 hover:bg-[#F4A261] hover:text-[#071A2B]"
               >
+
                 Continue into the night
 
                 <span className="transition-transform duration-300 group-hover:translate-x-1">
@@ -789,6 +1060,8 @@ export default function Home() {
             </div>
 
           </div>
+
+          {/* MENU NOTE */}
 
           <div className="mt-20 border-t border-[#071A2B]/10 pt-8">
 
@@ -821,11 +1094,14 @@ export default function Home() {
           </span>
 
           <h2 className="font-serif italic text-5xl sm:text-6xl lg:text-8xl leading-[0.9] mt-5 max-w-4xl">
+
             The night stays
             <br />
+
             <span className="text-[#F4A261]">
               lit.
             </span>
+
           </h2>
 
           <p className="mt-8 text-[#F6E7D8]/55 max-w-lg leading-relaxed">
@@ -833,87 +1109,36 @@ export default function Home() {
             late conversations, good food, and nowhere else you need to be.
           </p>
 
-          {/* MAIN NIGHT GALLERY */}
+          {/* NIGHT GALLERY */}
 
-          <div className="grid lg:grid-cols-5 gap-5 mt-16">
+          <div className="mt-16 max-w-5xl">
 
-            <div className="relative h-[430px] lg:h-[560px] lg:col-span-3 rounded-3xl overflow-hidden border border-white/10 group">
-
-              <Image
-                src="/images/pathway-night.jpg"
-                alt="Pathway at night"
-                fill
-                sizes="(max-width: 1024px) 100vw, 60vw"
-                className="object-cover transition-transform duration-1000 group-hover:scale-105"
-              />
-
-              <div className="absolute inset-0 bg-gradient-to-t from-[#071A2B]/75 via-transparent to-transparent" />
-
-              <span className="absolute bottom-6 left-6 font-mono text-[9px] tracking-[0.2em] uppercase text-white/70">
-                The path after dark
-              </span>
-
-            </div>
-
-            <div className="relative h-[430px] lg:h-[560px] lg:col-span-2 rounded-3xl overflow-hidden border border-white/10 group">
-
-              <Image
-                src="/images/cottagelights.jpg"
-                alt="Cottage lights at night"
-                fill
-                sizes="(max-width: 1024px) 100vw, 40vw"
-                className="object-cover transition-transform duration-1000 group-hover:scale-105"
-              />
-
-              <div className="absolute inset-0 bg-gradient-to-t from-[#071A2B]/75 via-transparent to-transparent" />
-
-              <span className="absolute bottom-6 left-6 font-mono text-[9px] tracking-[0.2em] uppercase text-white/70">
-                Warm lights
-              </span>
-
-            </div>
-
-          </div>
-
-          {/* SECOND NIGHT GALLERY */}
-
-          <div className="grid sm:grid-cols-2 gap-5 mt-5">
-
-            <div className="relative h-[330px] rounded-3xl overflow-hidden border border-white/10 group">
-
-              <Image
-                src="/images/nightcottage.jpg"
-                alt="Cottage at night"
-                fill
-                sizes="(max-width: 640px) 100vw, 50vw"
-                className="object-cover transition-transform duration-1000 group-hover:scale-105"
-              />
-
-              <div className="absolute inset-0 bg-gradient-to-t from-[#071A2B]/75 via-transparent to-transparent" />
-
-              <span className="absolute bottom-6 left-6 font-mono text-[9px] tracking-[0.2em] uppercase text-white/70">
-                Somewhere to stay
-              </span>
-
-            </div>
-
-            <div className="relative h-[330px] rounded-3xl overflow-hidden border border-white/10 group">
-
-              <Image
-                src="/images/cafe-lights.jpg"
-                alt="Cafe lights at night"
-                fill
-                sizes="(max-width: 640px) 100vw, 50vw"
-                className="object-cover transition-transform duration-1000 group-hover:scale-105"
-              />
-
-              <div className="absolute inset-0 bg-gradient-to-t from-[#071A2B]/75 via-transparent to-transparent" />
-
-              <span className="absolute bottom-6 left-6 font-mono text-[9px] tracking-[0.2em] uppercase text-white/70">
-                One more glow
-              </span>
-
-            </div>
+            <ImageCarousel
+              height="h-[400px] sm:h-[500px] lg:h-[540px]"
+              dark
+              images={[
+                {
+                  src: "/images/cottagelights.jpg",
+                  alt: "Cottage lights at night",
+                  label: "Warm lights",
+                },
+                {
+                  src: "/images/pathway-night.jpg",
+                  alt: "Pathway at night",
+                  label: "The path after dark",
+                },
+                {
+                  src: "/images/nightcottage.jpg",
+                  alt: "Cottage at night",
+                  label: "Somewhere to stay",
+                },
+                {
+                  src: "/images/cafe-lights.jpg",
+                  alt: "Cafe lights at night",
+                  label: "One more glow",
+                },
+              ]}
+            />
 
           </div>
 
@@ -934,6 +1159,7 @@ export default function Home() {
             </div>
 
             <button
+              type="button"
               onClick={() => scrollToSection("hero")}
               className="rounded-full border border-[#F4A261]/40 px-6 py-3 font-mono text-[10px] tracking-[0.2em] uppercase text-[#F4A261] transition-all duration-300 hover:bg-[#F4A261] hover:text-[#071A2B]"
             >
@@ -957,7 +1183,7 @@ export default function Home() {
           <div>
 
             <span className="font-serif italic text-3xl text-[#F6E7D8]">
-              Our Café
+              Magic Land
             </span>
 
             <p className="font-mono text-[9px] tracking-[0.2em] uppercase text-white/30 mt-3">
