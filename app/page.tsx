@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import type { TouchEvent } from "react";
+import { supabase } from "@/lib/supabase";
 
 /* =========================================================
    MAGIC LAND CAFE
