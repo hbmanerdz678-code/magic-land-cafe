@@ -8,16 +8,13 @@ import { supabase } from "@/lib/supabase";
 /* =========================================================
    MAGIC LAND CAFE
    MAIN WEBSITE DATA
-   ---------------------------------------------------------
-   Edit the information below when you need to update
-   products, prices, contact details, or navigation.
 ========================================================= */
 
 /* =========================================================
    BUSINESS INFORMATION
 ========================================================= */
 
-const business = {
+const defaultBusiness = {
   name: "Magic Land Cafe",
   tagline: "Where the day begins.",
   phone: "09759424937",
@@ -29,7 +26,6 @@ const business = {
   facebookUrl: "https://www.facebook.com/TheMagicLandCafe",
 
   tiktokName: "The Magic Land Cafe",
-  // Replace this with the actual TikTok profile URL when available.
   tiktokUrl: "#",
 };
 
@@ -374,7 +370,33 @@ const menuCategories = [
 ];
 
 /* =========================================================
-   CAROUSEL TYPES
+   SUPABASE MENU TYPE
+========================================================= */
+
+type MenuItem = {
+  id: number;
+  name: string;
+  description: string | null;
+  price: number;
+  category: string;
+  image: string | null;
+  is_available: boolean;
+};
+
+type BusinessInfo = {
+  id: number;
+  business_name: string;
+  tagline: string | null;
+  phone: string | null;
+  email: string | null;
+  location: string | null;
+  opening_hours: string | null;
+  facebook_url: string | null;
+  instagram_url: string | null;
+  tiktok_url: string | null;
+};
+/* =========================================================
+   CAROUSEL TYPE
 ========================================================= */
 
 type CarouselImage = {
@@ -397,13 +419,16 @@ function ImageCarousel({
   dark?: boolean;
 }) {
   const [current, setCurrent] = useState(0);
+  const [direction, setDirection] = useState<"next" | "previous">("next");
   const touchStart = useRef<number | null>(null);
 
   const next = () => {
+    setDirection("next");
     setCurrent((previous) => (previous + 1) % images.length);
   };
 
   const previous = () => {
+    setDirection("previous");
     setCurrent(
       (previous) => (previous - 1 + images.length) % images.length
     );
@@ -430,117 +455,188 @@ function ImageCarousel({
     touchStart.current = null;
   };
 
+  useEffect(() => {
+    if (images.length <= 1) return;
+
+    const timer = window.setInterval(() => {
+      setDirection("next");
+      setCurrent((previous) => (previous + 1) % images.length);
+    }, 6500);
+
+    return () => {
+      window.clearInterval(timer);
+    };
+  }, [images.length]);
+
   const activeImage = images[current];
 
   return (
     <div
-      className={`relative ${height} w-full overflow-hidden rounded-[2rem] ${
-        dark ? "bg-[#050F1A]" : "bg-[#DED4C7]"
-      } touch-pan-y`}
+      className={`relative ${height} w-full overflow-hidden rounded-[2rem] ${dark ? "bg-[#050F1A]" : "bg-[#DED4C7]"
+        } touch-pan-y`}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      {/* AMBIENT BACKGROUND */}
+      {/* =====================================================
+         AMBIENT BACKGROUND
+      ===================================================== */}
 
-      {images.map((image, index) => (
-        <div
-          key={`background-${image.src}`}
-          className={`absolute inset-0 transition-opacity duration-700 ${
-            index === current ? "opacity-100" : "opacity-0"
-          }`}
-          aria-hidden="true"
-        >
-          <Image
-            src={image.src}
-            alt=""
-            fill
-            sizes="100vw"
-            className="object-cover object-center scale-110 blur-2xl"
-          />
+      {images.map((image, index) => {
+        const isActive = index === current;
 
+        return (
           <div
-            className={`absolute inset-0 ${
-              dark
-                ? "bg-[#071A2B]/65"
-                : "bg-[#F6E7D8]/55"
-            }`}
-          />
-        </div>
-      ))}
-
-      {/* AMBIENT LIGHT */}
-
-      <div
-        className={`absolute inset-0 ${
-          dark
-            ? "bg-[radial-gradient(circle_at_center,transparent_15%,rgba(7,26,43,0.35)_75%,rgba(7,26,43,0.75)_100%)]"
-            : "bg-[radial-gradient(circle_at_center,transparent_15%,rgba(246,231,216,0.25)_70%,rgba(246,231,216,0.65)_100%)]"
-        }`}
-      />
-
-      {/* ORIGINAL IMAGE — NO ZOOM */}
-
-      {images.map((image, index) => (
-        <div
-          key={`main-${image.src}`}
-          className={`absolute inset-0 flex items-center justify-center p-3 sm:p-5 lg:p-7 transition-opacity duration-700 ease-in-out ${
-            index === current ? "opacity-100" : "opacity-0"
-          }`}
-          aria-hidden={index !== current}
-        >
-          <div className="relative h-full w-full">
+            key={`background-${image.src}`}
+            className={`absolute inset-0 transition-all duration-[1800ms] ease-out ${isActive
+                ? "opacity-100 scale-105"
+                : "opacity-0 scale-110"
+              }`}
+            aria-hidden="true"
+          >
             <Image
               src={image.src}
-              alt={image.alt}
+              alt=""
               fill
-              sizes="(max-width: 768px) 100vw, 80vw"
-              className="object-contain object-center"
-              priority={index === 0}
+              sizes="100vw"
+              className="object-cover object-center scale-110 blur-3xl"
+            />
+
+            <div
+              className={`absolute inset-0 ${dark
+                  ? "bg-[#071A2B]/55"
+                  : "bg-[#F6E7D8]/45"
+                }`}
             />
           </div>
-        </div>
-      ))}
+        );
+      })}
 
-      {/* IMAGE EDGE */}
+      {/* =====================================================
+         AMBIENT LIGHT
+      ===================================================== */}
 
-      <div className="absolute inset-3 sm:inset-5 lg:inset-7 rounded-[1.25rem] border border-white/10 pointer-events-none" />
+      <div
+        className={`absolute inset-0 pointer-events-none ${dark
+            ? "bg-[radial-gradient(circle_at_center,transparent_18%,rgba(7,26,43,0.28)_72%,rgba(7,26,43,0.6)_100%)]"
+            : "bg-[radial-gradient(circle_at_center,transparent_18%,rgba(246,231,216,0.18)_72%,rgba(246,231,216,0.5)_100%)]"
+          }`}
+      />
 
-      {/* PHOTO NUMBER */}
+      {/* =====================================================
+         MAIN IMAGE
+      ===================================================== */}
+
+      {images.map((image, index) => {
+        const isActive = index === current;
+
+        let motionClass = "translate-x-0";
+
+        if (!isActive) {
+          motionClass =
+            direction === "next"
+              ? "-translate-x-10"
+              : "translate-x-10";
+        }
+
+        return (
+          <div
+            key={`main-${image.src}`}
+            className={`absolute inset-0 flex items-center justify-center p-3 sm:p-5 lg:p-7
+              transition-all duration-[1200ms]
+              ease-[cubic-bezier(0.22,1,0.36,1)]
+              ${isActive
+                ? "opacity-100 scale-100 blur-0"
+                : `opacity-0 scale-[1.045] ${motionClass} blur-[3px]`
+              }
+            `}
+            aria-hidden={!isActive}
+          >
+            <div className="relative h-full w-full overflow-hidden rounded-[1.15rem]">
+              <Image
+                src={image.src}
+                alt={image.alt}
+                fill
+                sizes="(max-width: 768px) 100vw, 80vw"
+                className={`object-contain object-center
+                  transition-transform duration-[6500ms]
+                  ease-out
+                  ${isActive
+                    ? "scale-[1.03]"
+                    : "scale-100"
+                  }
+                `}
+                priority={index === 0}
+              />
+
+              {/* subtle cinematic wash */}
+              <div
+                className={`absolute inset-0 pointer-events-none transition-opacity duration-1000 ${isActive
+                    ? "opacity-0"
+                    : "opacity-20"
+                  } bg-white/10`}
+              />
+            </div>
+          </div>
+        );
+      })}
+
+      {/* =====================================================
+         IMAGE EDGE
+      ===================================================== */}
+
+      <div className="absolute inset-3 sm:inset-5 lg:inset-7 rounded-[1.25rem] border border-white/15 pointer-events-none" />
+
+      {/* =====================================================
+         PHOTO NUMBER
+      ===================================================== */}
 
       <div className="absolute left-5 top-5 sm:left-7 sm:top-7 z-20">
         <div className="flex items-center gap-3">
-          <span className="font-mono text-[9px] tracking-[0.2em] text-white/65">
+          <span
+            className="font-mono text-[9px] tracking-[0.2em] text-white/75 transition-all duration-700"
+            key={`number-${current}`}
+          >
             {String(current + 1).padStart(2, "0")}
           </span>
 
           <div className="h-px w-8 bg-white/25" />
 
-          <span className="font-mono text-[9px] tracking-[0.2em] text-white/35">
+          <span className="font-mono text-[9px] tracking-[0.2em] text-white/40">
             {String(images.length).padStart(2, "0")}
           </span>
         </div>
       </div>
 
-      {/* LABEL */}
+      {/* =====================================================
+         LABEL
+      ===================================================== */}
 
       <div className="absolute left-5 bottom-5 sm:left-7 sm:bottom-7 z-20">
-        <div className="flex items-center gap-3">
+        <div
+          key={`label-${current}`}
+          className={`flex items-center gap-3 animate-[fadeSlideUp_700ms_ease-out] ${direction === "next"
+              ? "translate-x-0"
+              : "translate-x-0"
+            }`}
+        >
           <div className="h-px w-6 bg-[#F4A261]" />
 
-          <span className="font-mono text-[9px] sm:text-[10px] tracking-[0.22em] uppercase text-white/80 drop-shadow-lg">
+          <span className="font-mono text-[9px] sm:text-[10px] tracking-[0.22em] uppercase text-white/85 drop-shadow-lg">
             {activeImage.label}
           </span>
         </div>
       </div>
 
-      {/* ARROWS */}
+      {/* =====================================================
+         ARROWS
+      ===================================================== */}
 
       <div className="absolute right-5 bottom-5 sm:right-7 sm:bottom-7 z-20 flex items-center gap-2">
         <button
           type="button"
           onClick={previous}
           aria-label="Previous image"
-          className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-black/20 text-white backdrop-blur-xl transition-all duration-300 hover:bg-white hover:text-[#071A2B]"
+          className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-black/20 text-white backdrop-blur-xl transition-all duration-300 hover:scale-105 hover:bg-white hover:text-[#071A2B]"
         >
           ←
         </button>
@@ -549,35 +645,64 @@ function ImageCarousel({
           type="button"
           onClick={next}
           aria-label="Next image"
-          className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-black/20 text-white backdrop-blur-xl transition-all duration-300 hover:bg-white hover:text-[#071A2B]"
+          className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-black/20 text-white backdrop-blur-xl transition-all duration-300 hover:scale-105 hover:bg-white hover:text-[#071A2B]"
         >
           →
         </button>
       </div>
 
-      {/* DOTS */}
+      {/* =====================================================
+         DOTS
+      ===================================================== */}
 
       <div className="absolute bottom-6 left-1/2 z-20 -translate-x-1/2 flex items-center gap-1.5">
         {images.map((image, index) => (
           <button
             key={`dot-${image.src}`}
             type="button"
-            onClick={() => setCurrent(index)}
+            onClick={() => {
+              setDirection(index > current ? "next" : "previous");
+              setCurrent(index);
+            }}
             aria-label={`Show image ${index + 1}`}
-            className={`h-1.5 rounded-full transition-all duration-500 ${
-              index === current
+            className={`h-1.5 rounded-full transition-all duration-500 ${index === current
                 ? "w-7 bg-white"
-                : "w-1.5 bg-white/40 hover:bg-white/70"
-            }`}
+                : "w-1.5 bg-white/40 hover:w-3 hover:bg-white/70"
+              }`}
           />
         ))}
       </div>
+
+      {/* =====================================================
+         LOCAL ANIMATION
+      ===================================================== */}
+
+      <style jsx>{`
+        @keyframes fadeSlideUp {
+          from {
+            opacity: 0;
+            transform: translateY(12px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          * {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+          }
+        }
+      `}</style>
     </div>
   );
 }
 
 /* =========================================================
-   MENU CATEGORY COMPONENT
+   MENU CATEGORY
 ========================================================= */
 
 function MenuCategory({
@@ -635,9 +760,113 @@ function MenuCategory({
 
 export default function Home() {
   const [active, setActive] = useState("hero");
-
+  const [supabaseMenu, setSupabaseMenu] = useState<MenuItem[]>([]);
+  const [businessInfo, setBusinessInfo] = useState<BusinessInfo | null>(null);
   const refs = useRef<Record<string, HTMLElement | null>>({});
 
+  /* =======================================================
+     SUPABASE MENU
+  ======================================================= */
+
+  useEffect(() => {
+    console.log("🔥 MENU EFFECT IS RUNNING");
+
+    let mounted = true;
+
+    const loadMenu = async () => {
+      try {
+        console.log("🔥 STARTING SUPABASE QUERY");
+
+        const { data, error } = await supabase
+          .from("menu_items")
+          .select("*")
+          .order("id", { ascending: true });
+
+        console.log("🔥 SUPABASE DATA:", data);
+        console.log("🔥 SUPABASE ERROR:", error);
+
+        if (error) {
+          console.error("Supabase menu error:", error.message);
+
+          if (mounted) {
+            setSupabaseMenu([]);
+          }
+
+          return;
+        }
+
+        if (mounted) {
+          console.log("SUPABASE MENU DATA:", data);
+          console.log("SUPABASE MENU ERROR:", error);
+
+          setSupabaseMenu(data ?? []);
+        }
+      } catch (error) {
+        console.error("Unable to connect to Supabase:", error);
+
+        if (mounted) {
+          setSupabaseMenu([]);
+        }
+      }
+    };
+
+    loadMenu();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+  useEffect(() => {
+    let mounted = true;
+
+    const loadBusinessInfo = async () => {
+      try {
+        console.log("🔥 STARTING BUSINESS INFO QUERY");
+
+        const { data, error } = await supabase
+          .from("business_info")
+          .select("*")
+          .limit(1)
+          .maybeSingle();
+
+        console.log("🔥 BUSINESS INFO:", data);
+        console.log("🔥 BUSINESS INFO ERROR:", error);
+
+        if (error) {
+          console.error("Supabase business info error:", error.message);
+          return;
+        }
+
+        if (mounted) {
+          setBusinessInfo(data);
+        }
+      } catch (error) {
+        console.error("Unable to load business info:", error);
+      }
+    };
+
+    loadBusinessInfo();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+  const displayedMenuCategories = menuCategories
+    .map((category) => ({
+      ...category,
+      items: supabaseMenu
+        .filter(
+          (item) =>
+            item.category === category.name &&
+            item.is_available !== false
+        )
+        .map((item) => ({
+          name: item.name,
+          description: item.description ?? "",
+          price: `₱${item.price}`,
+        })),
+    }))
+    .filter((category) => category.items.length > 0);
   /* =======================================================
      SECTION OBSERVER
   ======================================================= */
@@ -666,7 +895,22 @@ export default function Home() {
       observer.disconnect();
     };
   }, []);
+  const business = {
+    name: businessInfo?.business_name ?? defaultBusiness.name,
+    tagline: businessInfo?.tagline ?? defaultBusiness.tagline,
+    phone: businessInfo?.phone ?? defaultBusiness.phone,
+    email: businessInfo?.email ?? defaultBusiness.email,
+    location: businessInfo?.location ?? defaultBusiness.location,
+    hours: businessInfo?.opening_hours ?? defaultBusiness.hours,
 
+    facebookName: defaultBusiness.facebookName,
+    facebookUrl:
+      businessInfo?.facebook_url ?? defaultBusiness.facebookUrl,
+
+    tiktokName: defaultBusiness.tiktokName,
+    tiktokUrl:
+      businessInfo?.tiktok_url ?? defaultBusiness.tiktokUrl,
+  };
   /* =======================================================
      SCROLL
   ======================================================= */
@@ -705,18 +949,17 @@ export default function Home() {
                 Magic Land
               </button>
 
-              {/* DESKTOP / MOBILE NAV */}
+              {/* NAVIGATION */}
 
               <div className="flex min-w-0 items-center gap-1 sm:gap-2 overflow-x-auto scrollbar-hide">
 
                 <button
                   type="button"
                   onClick={() => scrollToSection("hero")}
-                  className={`shrink-0 rounded-full px-3 sm:px-4 py-2 font-mono text-[9px] sm:text-[10px] tracking-[0.12em] uppercase transition-all duration-300 ${
-                    active === "hero"
-                      ? "bg-white/15 text-[#F4A261]"
-                      : "text-[#F6E7D8]/70 hover:bg-white/10 hover:text-white"
-                  }`}
+                  className={`shrink-0 rounded-full px-3 sm:px-4 py-2 font-mono text-[9px] sm:text-[10px] tracking-[0.12em] uppercase transition-all duration-300 ${active === "hero"
+                    ? "bg-white/15 text-[#F4A261]"
+                    : "text-[#F6E7D8]/70 hover:bg-white/10 hover:text-white"
+                    }`}
                 >
                   Home
                 </button>
@@ -724,11 +967,10 @@ export default function Home() {
                 <button
                   type="button"
                   onClick={() => scrollToSection("products")}
-                  className={`shrink-0 rounded-full px-3 sm:px-4 py-2 font-mono text-[9px] sm:text-[10px] tracking-[0.12em] uppercase transition-all duration-300 ${
-                    active === "products"
-                      ? "bg-white/15 text-[#F4A261]"
-                      : "text-[#F6E7D8]/70 hover:bg-white/10 hover:text-white"
-                  }`}
+                  className={`shrink-0 rounded-full px-3 sm:px-4 py-2 font-mono text-[9px] sm:text-[10px] tracking-[0.12em] uppercase transition-all duration-300 ${active === "products"
+                    ? "bg-white/15 text-[#F4A261]"
+                    : "text-[#F6E7D8]/70 hover:bg-white/10 hover:text-white"
+                    }`}
                 >
                   Products
                 </button>
@@ -736,11 +978,10 @@ export default function Home() {
                 <button
                   type="button"
                   onClick={() => scrollToSection("about")}
-                  className={`shrink-0 rounded-full px-3 sm:px-4 py-2 font-mono text-[9px] sm:text-[10px] tracking-[0.12em] uppercase transition-all duration-300 ${
-                    active === "about"
-                      ? "bg-white/15 text-[#F4A261]"
-                      : "text-[#F6E7D8]/70 hover:bg-white/10 hover:text-white"
-                  }`}
+                  className={`shrink-0 rounded-full px-3 sm:px-4 py-2 font-mono text-[9px] sm:text-[10px] tracking-[0.12em] uppercase transition-all duration-300 ${active === "about"
+                    ? "bg-white/15 text-[#F4A261]"
+                    : "text-[#F6E7D8]/70 hover:bg-white/10 hover:text-white"
+                    }`}
                 >
                   About
                 </button>
@@ -748,11 +989,10 @@ export default function Home() {
                 <button
                   type="button"
                   onClick={() => scrollToSection("contact")}
-                  className={`shrink-0 rounded-full px-3 sm:px-4 py-2 font-mono text-[9px] sm:text-[10px] tracking-[0.12em] uppercase transition-all duration-300 ${
-                    active === "contact"
-                      ? "bg-white/15 text-[#F4A261]"
-                      : "text-[#F6E7D8]/70 hover:bg-white/10 hover:text-white"
-                  }`}
+                  className={`shrink-0 rounded-full px-3 sm:px-4 py-2 font-mono text-[9px] sm:text-[10px] tracking-[0.12em] uppercase transition-all duration-300 ${active === "contact"
+                    ? "bg-white/15 text-[#F4A261]"
+                    : "text-[#F6E7D8]/70 hover:bg-white/10 hover:text-white"
+                    }`}
                 >
                   Contact
                 </button>
@@ -781,19 +1021,17 @@ export default function Home() {
             aria-label={`Go to ${section.label}`}
           >
             <div
-              className={`h-2.5 w-2.5 rounded-full transition-all duration-500 ${
-                active === section.id
-                  ? "bg-[#F4A261] scale-125 shadow-[0_0_18px_5px_rgba(244,162,97,0.45)]"
-                  : "bg-white/20 group-hover:bg-white/50"
-              }`}
+              className={`h-2.5 w-2.5 rounded-full transition-all duration-500 ${active === section.id
+                ? "bg-[#F4A261] scale-125 shadow-[0_0_18px_5px_rgba(244,162,97,0.45)]"
+                : "bg-white/20 group-hover:bg-white/50"
+                }`}
             />
 
             <span
-              className={`font-mono text-[10px] tracking-[0.15em] uppercase transition-all duration-500 ${
-                active === section.id
-                  ? "opacity-100 text-[#F4A261]"
-                  : "opacity-0 group-hover:opacity-70"
-              }`}
+              className={`font-mono text-[10px] tracking-[0.15em] uppercase transition-all duration-500 ${active === section.id
+                ? "opacity-100 text-[#F4A261]"
+                : "opacity-0 group-hover:opacity-70"
+                }`}
             >
               {section.time}
             </span>
@@ -816,20 +1054,34 @@ export default function Home() {
 
         <div className="absolute inset-0 z-0">
           <Image
-            src="/images/cafe-lights.jpg"
-            alt="Warm lights at Magic Land Cafe"
+            src="/images/sunrise-1.jpg"
+            alt="Sunset view at Magic Land Cafe"
             fill
             priority
             sizes="100vw"
             className="object-cover object-center"
           />
+
+          <div className="absolute inset-0 bg-[#F4E8D8]/25" />
+
+          <div className="absolute inset-0 bg-gradient-to-r from-[#17324A]/30 via-transparent to-transparent" />
         </div>
 
-        <div className="absolute inset-0 z-[1] bg-gradient-to-b from-[#071A2B]/60 via-transparent to-[#071A2B]/70 pointer-events-none" />
+        <div className="absolute inset-0 z-[1] bg-gradient-to-b from-[#071A2B]/20 via-transparent to-[#071A2B]/45 pointer-events-none" />
 
-        <div className="absolute inset-0 z-[1] bg-gradient-to-r from-[#071A2B]/90 via-[#071A2B]/40 to-transparent pointer-events-none" />
+        <div className="absolute inset-0 z-[1] bg-gradient-to-r from-[#17324A]/18 via-[#17324A]/5 to-transparent pointer-events-none" />
 
         <div className="absolute inset-0 z-[1] bg-[radial-gradient(circle_at_68%_45%,transparent_0%,transparent_42%,rgba(7,26,43,0.10)_70%,rgba(7,26,43,0.30)_100%)] pointer-events-none" />
+        {/* LOGO LAYER */}
+        <div className="absolute inset-0 z-[2] pointer-events-none flex items-center justify-center lg:justify-end">
+          <Image
+            src="/images/logo-1.png"
+            alt="Magic Land Cafe logo"
+            width={700}
+            height={700}
+            className="w-[280px] sm:w-[360px] lg:w-[500px] xl:w-[560px] h-auto object-contain opacity-90 mr-0 lg:mr-[8vw]"
+          />
+        </div>
 
         <div className="relative z-10 min-h-screen flex items-start">
 
@@ -947,8 +1199,13 @@ export default function Home() {
             </p>
 
             <ImageCarousel
-              height="h-[380px] sm:h-[480px] lg:h-[520px]"
+              height="h-[600px] sm:h-[680px] lg:h-[700px]"
               images={[
+                {
+                  src: "/images/sunrise-1.jpg",
+                  alt: "Sunrise over the mountains",
+                  label: "Slow Morning",
+                },
                 {
                   src: "/images/cafe6.jpg",
                   alt: "Morning at the cafe",
@@ -956,9 +1213,10 @@ export default function Home() {
                 },
                 {
                   src: "/images/pathway-noon.jpg",
-                  alt: "Pathway during the day",
+                  alt: "Path during the day",
                   label: "The path at noon",
                 },
+
                 {
                   src: "/images/cafe7.jpg",
                   alt: "Mountain view from the cafe",
@@ -1229,13 +1487,11 @@ export default function Home() {
 
           </div>
 
-          {/* =================================================
-              COMPLETE MENU
-          ================================================= */}
+          {/* COMPLETE MENU */}
 
           <div className="mt-24 space-y-20">
 
-            {menuCategories.map((category) => (
+            {displayedMenuCategories.map((category) => (
               <MenuCategory
                 key={category.name}
                 category={category}
@@ -1243,6 +1499,12 @@ export default function Home() {
             ))}
 
           </div>
+
+          {/* =================================================
+              SUPABASE CONNECTION TEST
+          ================================================= */}
+
+
 
           {/* MENU NOTE */}
 
@@ -1569,11 +1831,10 @@ export default function Home() {
               href={business.tiktokUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className={`group rounded-[1.5rem] border border-[#071A2B]/10 p-7 transition-all duration-300 hover:-translate-y-1 ${
-                business.tiktokUrl === "#"
-                  ? "bg-white/20 cursor-default"
-                  : "bg-white/30 hover:bg-white/60"
-              }`}
+              className={`group rounded-[1.5rem] border border-[#071A2B]/10 p-7 transition-all duration-300 hover:-translate-y-1 ${business.tiktokUrl === "#"
+                ? "bg-white/20 cursor-default"
+                : "bg-white/30 hover:bg-white/60"
+                }`}
               onClick={(event) => {
                 if (business.tiktokUrl === "#") {
                   event.preventDefault();
