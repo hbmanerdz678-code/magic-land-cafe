@@ -769,25 +769,16 @@ export default function Home() {
   ======================================================= */
 
   useEffect(() => {
-    console.log("🔥 MENU EFFECT IS RUNNING");
-
     let mounted = true;
 
     const loadMenu = async () => {
       try {
-        console.log("🔥 STARTING SUPABASE QUERY");
-
         const { data, error } = await supabase
           .from("menu_items")
           .select("*")
           .order("id", { ascending: true });
 
-        console.log("🔥 SUPABASE DATA:", data);
-        console.log("🔥 SUPABASE ERROR:", error);
-
         if (error) {
-          console.error("Supabase menu error:", error.message);
-
           if (mounted) {
             setSupabaseMenu([]);
           }
@@ -796,14 +787,9 @@ export default function Home() {
         }
 
         if (mounted) {
-          console.log("SUPABASE MENU DATA:", data);
-          console.log("SUPABASE MENU ERROR:", error);
-
           setSupabaseMenu(data ?? []);
         }
       } catch (error) {
-        console.error("Unable to connect to Supabase:", error);
-
         if (mounted) {
           setSupabaseMenu([]);
         }
@@ -821,19 +807,13 @@ export default function Home() {
 
     const loadBusinessInfo = async () => {
       try {
-        console.log("🔥 STARTING BUSINESS INFO QUERY");
-
         const { data, error } = await supabase
           .from("business_info")
           .select("*")
           .limit(1)
           .maybeSingle();
 
-        console.log("🔥 BUSINESS INFO:", data);
-        console.log("🔥 BUSINESS INFO ERROR:", error);
-
         if (error) {
-          console.error("Supabase business info error:", error.message);
           return;
         }
 
@@ -841,7 +821,6 @@ export default function Home() {
           setBusinessInfo(data);
         }
       } catch (error) {
-        console.error("Unable to load business info:", error);
       }
     };
 
