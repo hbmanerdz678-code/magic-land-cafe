@@ -1155,12 +1155,12 @@ export default function Home() {
         ref={(element) => {
           refs.current.morning = element;
         }}
-        className="relative overflow-hidden bg-[#F6E7D8] text-[#071A2B]"
+        className="relative scroll-mt-[5.5rem] overflow-hidden bg-[#F6E7D8] text-[#071A2B] sm:scroll-mt-0"
       >
 
-        <div className="relative z-10 px-8 sm:px-16 lg:px-24 py-28 sm:py-32 max-w-7xl mx-auto">
+        <div className="relative z-10 mx-auto max-w-7xl px-6 pb-24 pt-36 sm:px-16 sm:py-32 lg:px-24">
 
-          <div className="mb-14">
+          <div className="mb-12 sm:mb-14">
 
             <span className="font-mono text-[#087E8B] text-[10px] tracking-[0.3em] uppercase">
               09:15 — Ocean Morning
@@ -1174,7 +1174,7 @@ export default function Home() {
               </span>
             </h2>
 
-            <p className="mt-7 max-w-xl text-[#071A2B]/60 leading-relaxed">
+            <p className="mt-7 max-w-xl leading-relaxed text-[#071A2B]/60 sm:mt-8">
               Sunlight spills across the table. The first drink arrives warm.
               Outside, the mountains and ocean give you another reason to slow
               down.
@@ -1184,12 +1184,12 @@ export default function Home() {
 
           <div className="max-w-5xl">
 
-            <p className="mb-4 font-mono text-[9px] tracking-[0.2em] uppercase text-[#071A2B]/35">
+            <p className="mb-5 font-mono text-[9px] tracking-[0.2em] uppercase text-[#071A2B]/35 sm:mb-4">
               Stories from the café · swipe or use the arrows
             </p>
 
             <ImageCarousel
-              height="h-[600px] sm:h-[680px] lg:h-[700px]"
+              height="h-[440px] sm:h-[680px] lg:h-[700px]"
               images={[
                 {
                   src: "/images/sunrise-1.jpg",
