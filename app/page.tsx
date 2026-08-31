@@ -1028,17 +1028,17 @@ export default function Home() {
         ref={(element) => {
           refs.current.hero = element;
         }}
-        className="relative min-h-screen w-full overflow-hidden"
+        className="hero-cinematic relative min-h-[680px] min-h-[100svh] w-full overflow-hidden"
       >
 
         <div className="absolute inset-0 z-0">
           <Image
             src="/images/sunrise-1.jpg"
-            alt="Sunset view at Magic Land Cafe"
+            alt="Sunrise view at Magic Land Cafe"
             fill
             priority
             sizes="100vw"
-            className="object-cover object-center"
+            className="hero-cinematic__image object-cover object-center"
           />
 
           <div className="absolute inset-0 bg-[#F4E8D8]/25" />
@@ -1051,24 +1051,35 @@ export default function Home() {
         <div className="absolute inset-0 z-[1] bg-gradient-to-r from-[#17324A]/18 via-[#17324A]/5 to-transparent pointer-events-none" />
 
         <div className="absolute inset-0 z-[1] bg-[radial-gradient(circle_at_68%_45%,transparent_0%,transparent_42%,rgba(7,26,43,0.10)_70%,rgba(7,26,43,0.30)_100%)] pointer-events-none" />
+
+        <div className="hero-cinematic__sunrise absolute inset-0 z-[1] pointer-events-none" aria-hidden="true" />
+
+        <div className="hero-cinematic__particles absolute inset-0 z-[1] pointer-events-none" aria-hidden="true">
+          <span />
+          <span />
+          <span />
+          <span />
+          <span />
+        </div>
+
         {/* LOGO LAYER */}
-        <div className="absolute inset-0 z-[2] pointer-events-none flex items-center justify-center lg:justify-end">
+        <div className="hero-cinematic__logo absolute inset-0 z-[2] pointer-events-none flex items-start justify-center pt-28 sm:pt-32 lg:items-center lg:justify-end lg:pt-0">
           <Image
             src="/images/logo-1.png"
             alt="Magic Land Cafe logo"
             width={700}
             height={700}
-            className="w-[280px] sm:w-[360px] lg:w-[500px] xl:w-[560px] h-auto object-contain opacity-90 mr-0 lg:mr-[8vw]"
+            className="h-auto w-[160px] object-contain opacity-90 sm:w-[230px] lg:w-[500px] lg:mr-[8vw] xl:w-[560px]"
           />
         </div>
 
-        <div className="relative z-10 min-h-screen flex items-start">
+        <div className="relative z-10 flex min-h-[680px] min-h-[100svh] items-start">
 
-          <div className="w-full px-6 sm:px-10 lg:px-16 xl:px-20 pt-[30vh] sm:pt-[27vh] lg:pt-[25vh]">
+          <div className="w-full px-6 pb-28 pt-[min(51svh,25rem)] sm:px-10 sm:pt-[min(49svh,27rem)] lg:px-16 lg:pb-0 lg:pt-[25vh] xl:px-20">
 
             <div className="max-w-[430px] sm:max-w-[480px] lg:max-w-[510px]">
 
-              <div className="flex items-center gap-4 mb-5">
+              <div className="hero-cinematic__reveal hero-cinematic__reveal--label mb-5 flex items-center gap-4">
 
                 <div className="h-px w-9 sm:w-12 bg-[#F4A261]" />
 
@@ -1078,7 +1089,7 @@ export default function Home() {
 
               </div>
 
-              <h1 className="font-serif italic font-light text-5xl sm:text-6xl lg:text-7xl xl:text-[5.5rem] leading-[0.88] tracking-tight text-[#F6E7D8]/95 drop-shadow-[0_3px_18px_rgba(0,0,0,0.5)]">
+              <h1 className="hero-cinematic__reveal hero-cinematic__reveal--headline font-serif italic font-light text-[clamp(2.9rem,13vw,3.7rem)] sm:text-6xl lg:text-7xl xl:text-[5.5rem] leading-[0.88] tracking-tight text-[#F6E7D8]/95 drop-shadow-[0_3px_18px_rgba(0,0,0,0.5)]">
 
                 Where the
 
@@ -1090,12 +1101,12 @@ export default function Home() {
 
               </h1>
 
-              <p className="mt-6 text-sm sm:text-base lg:text-lg font-light text-[#F6E7D8]/70 max-w-[430px] leading-relaxed drop-shadow-[0_2px_10px_rgba(0,0,0,0.45)]">
+              <p className="hero-cinematic__reveal hero-cinematic__reveal--description mt-6 max-w-[430px] text-sm font-light leading-relaxed text-[#F6E7D8]/70 drop-shadow-[0_2px_10px_rgba(0,0,0,0.45)] sm:text-base lg:text-lg">
                 Coffee, ocean air, mountain light, and a place to slow down.
                 Good food, refreshing drinks, and moments worth staying for.
               </p>
 
-              <div className="mt-7 flex flex-wrap items-center gap-4">
+              <div className="hero-cinematic__reveal hero-cinematic__reveal--cta mt-7 flex flex-wrap items-center gap-4">
 
                 <button
                   type="button"
@@ -1123,7 +1134,7 @@ export default function Home() {
 
         <div className="absolute bottom-0 left-0 right-0 z-[2] h-40 bg-gradient-to-t from-[#071A2B] to-transparent pointer-events-none" />
 
-        <div className="absolute bottom-8 right-8 sm:right-16 z-10 flex flex-col items-center gap-2 text-[#F6E7D8]/50">
+        <div className="absolute bottom-8 right-8 z-10 hidden flex-col items-center gap-2 text-[#F6E7D8]/50 sm:right-16 lg:flex">
 
           <span className="font-mono text-[9px] tracking-[0.2em] uppercase [writing-mode:vertical-rl]">
             Scroll
@@ -1144,12 +1155,12 @@ export default function Home() {
         ref={(element) => {
           refs.current.morning = element;
         }}
-        className="relative overflow-hidden bg-[#F6E7D8] text-[#071A2B]"
+        className="relative scroll-mt-[5.5rem] overflow-hidden bg-[#F6E7D8] text-[#071A2B] sm:scroll-mt-0"
       >
 
-        <div className="relative z-10 px-8 sm:px-16 lg:px-24 py-28 sm:py-32 max-w-7xl mx-auto">
+        <div className="relative z-10 mx-auto max-w-7xl px-6 pb-24 pt-36 sm:px-16 sm:py-32 lg:px-24">
 
-          <div className="mb-14">
+          <div className="mb-12 sm:mb-14">
 
             <span className="font-mono text-[#087E8B] text-[10px] tracking-[0.3em] uppercase">
               09:15 — Ocean Morning
@@ -1163,7 +1174,7 @@ export default function Home() {
               </span>
             </h2>
 
-            <p className="mt-7 max-w-xl text-[#071A2B]/60 leading-relaxed">
+            <p className="mt-7 max-w-xl leading-relaxed text-[#071A2B]/60 sm:mt-8">
               Sunlight spills across the table. The first drink arrives warm.
               Outside, the mountains and ocean give you another reason to slow
               down.
@@ -1173,12 +1184,12 @@ export default function Home() {
 
           <div className="max-w-5xl">
 
-            <p className="mb-4 font-mono text-[9px] tracking-[0.2em] uppercase text-[#071A2B]/35">
+            <p className="mb-5 font-mono text-[9px] tracking-[0.2em] uppercase text-[#071A2B]/35 sm:mb-4">
               Stories from the café · swipe or use the arrows
             </p>
 
             <ImageCarousel
-              height="h-[600px] sm:h-[680px] lg:h-[700px]"
+              height="h-[440px] sm:h-[680px] lg:h-[700px]"
               images={[
                 {
                   src: "/images/sunrise-1.jpg",
